@@ -2,6 +2,7 @@
    CONFIGURAÇÃO DA API
 ====================================================== */
 
+// Centraliza a URL base para evitar repetições nos outros arquivos
 export const API_BASE_URL = "https://api.semdominio.online";
 
 /**
@@ -25,6 +26,7 @@ export async function apiRequest(endpoint, options = {}) {
     
     let data;
     const contentType = response.headers.get("content-type");
+    
     if (contentType && contentType.includes("application/json")) {
       data = await response.json();
     } else {
@@ -47,7 +49,8 @@ export async function apiRequest(endpoint, options = {}) {
 ====================================================== */
 
 /**
- * Regra oficial de pontuação do FutPontos
+ * Regra oficial de pontuação do FutPontos baseada na sua tabela SQL
+ * SQL: vitorias, empate, defesa, gols, infracoes
  */
 export function calculatePoints(vitorias = 0, empates = 0, defesas = 0, gols = 0, infracoes = 0) {
   return (
@@ -76,7 +79,10 @@ export function showFeedback(message, type = "success") {
   div.textContent = message;
 
   container.appendChild(div);
+
+  // Animação de saída
   setTimeout(() => {
+    div.style.transition = "opacity 0.3s ease";
     div.style.opacity = "0";
     setTimeout(() => div.remove(), 300);
   }, 3000);
@@ -96,7 +102,7 @@ function initGlobalUI() {
     });
   }
 
-  // Link Ativo
+  // Link Ativo (Destaque na navegação)
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".app-nav a").forEach(link => {
     const href = link.getAttribute("href");
@@ -107,11 +113,12 @@ function initGlobalUI() {
     }
   });
 
-  // Footer Dinâmico
-  const footer = document.querySelector(".app-footer");
-  if (footer) {
-    footer.innerHTML = `&copy; ${new Date().getFullYear()} Baba Sem Domínio - Todos os direitos reservados.`;
+  // Footer Dinâmico com Ano Atual
+  const footerContent = document.querySelector(".footer-content span");
+  if (footerContent) {
+    footerContent.textContent = `© ${new Date().getFullYear()} • Sem Domínio - Todos os direitos reservados.`;
   }
 }
 
+// Garante que a UI global (menu/footer) carregue em todas as páginas
 document.addEventListener("DOMContentLoaded", initGlobalUI);
