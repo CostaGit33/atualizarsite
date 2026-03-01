@@ -4,7 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>• Classificação</title>
+  <title>Classificação • FutPontos</title>
+  <meta name="description" content="Classificação geral individual e ranking visual FutPontos." />
+
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVYJFM295R"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VVYJFM295R', {
+      anonymize_ip: true,
+      page_title: document.title,
+      page_path: window.location.pathname
+    });
+  </script>
 
   <!-- CSS -->
   <link rel="stylesheet" href="common-nav.css" />
@@ -16,15 +30,12 @@
   <!-- ================= HEADER ================= -->
   <header class="app-header">
     <div class="brand">
-
-      <!-- Escudo no topo (decorativo controlado por CSS) -->
       <img
         src="futponts_large.png"
         alt=""
         aria-hidden="true"
         class="brand-logo"
       />
-
     </div>
 
     <button class="menu-toggle" aria-label="Abrir menu">☰</button>
@@ -46,14 +57,11 @@
 
     <!-- ===== CLASSIFICAÇÃO ===== -->
     <section class="classification-section">
-
       <header class="section-header">
         <h2>🏆 Classificação Geral Individual</h2>
       </header>
 
       <div class="table-wrapper">
-
-        <!-- Escudo decorativo no canto da tabela -->
         <img
           src="futponts_large.png"
           alt=""
@@ -74,19 +82,13 @@
               <th>INF</th>
             </tr>
           </thead>
-
-          <tbody id="playerList">
-            <!-- Linhas geradas via classificacao.js -->
-          </tbody>
+          <tbody id="playerList"></tbody>
         </table>
-
       </div>
-
     </section>
 
     <!-- ===== RANKING VISUAL ===== -->
     <section class="cards-section">
-
       <header class="section-header">
         <h2>🔥 Ranking Visual</h2>
       </header>
@@ -95,10 +97,7 @@
         id="rankingCards"
         class="cards"
         aria-live="polite"
-      >
-        <!-- Cards gerados via JavaScript -->
-      </div>
-
+      ></div>
     </section>
 
   </main>
@@ -112,7 +111,7 @@
         aria-hidden="true"
         class="footer-logo"
       />
-      <span>© • Sem Domínio</span>
+      <span>© 2026 • FutPontos</span>
     </div>
   </footer>
 
@@ -120,8 +119,8 @@
   <div id="feedback" aria-live="polite"></div>
 
   <!-- JS -->
-  <script type="module" src="./globais.js"></script>
-  <script type="module" src="./classificacao.js"></script>
+  <script type="module" src="./globais.js" defer></script>
+  <script type="module" src="./classificacao.js" defer></script>
 
 </body>
 </html>
