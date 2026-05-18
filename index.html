@@ -1,126 +1,502 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sem Domínio · Classificação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080D;--surface:#0E1118;--card:#141923;--border:#1E2A36;
+  --lime:#00E676;--lime-dim:rgba(0,230,118,.12);--lime-glow:rgba(0,230,118,.3);
+  --gold:#FFB300;--gold-dim:rgba(255,179,0,.12);
+  --silver:#9BA8B5;--bronze:#CD7F32;
+  --red:#FF4757;--red-dim:rgba(255,71,87,.12);
+  --text:#E8EDF5;--sub:#6B7E95;--muted:#2E3D4E;
+  --fd:'Bebas Neue',sans-serif;--fb:'Barlow Condensed',sans-serif;
+  --r:12px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100dvh;overflow-x:hidden}
 
-  <title>Classificação • FutPontos</title>
-  <meta name="description" content="Classificação geral individual e ranking visual FutPontos." />
+/* SCANLINES */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:9999}
 
-  <!-- Google Analytics (GA4) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVYJFM295R"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-VVYJFM295R', {
-      anonymize_ip: true,
-      page_title: document.title,
-      page_path: window.location.pathname
-    });
-  </script>
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;gap:1rem}
+.logo{font-family:var(--fd);font-size:1.6rem;letter-spacing:3px;color:var(--lime);line-height:1;user-select:none}
+.logo em{color:var(--sub);font-family:var(--fb);font-style:normal;font-size:.6rem;letter-spacing:4px;display:block;margin-top:-3px}
+nav ul{list-style:none;display:flex;gap:.25rem}
+nav a{display:inline-block;padding:.35rem .9rem;border-radius:6px;font-family:var(--fd);font-size:.9rem;letter-spacing:2px;color:var(--sub);text-decoration:none;transition:.2s}
+nav a:hover{color:var(--text);background:var(--card)}
+nav a.active{color:var(--lime);background:var(--lime-dim)}
+.header-right{display:flex;align-items:center;gap:.75rem}
+.season-badge{font-family:var(--fd);font-size:.8rem;letter-spacing:2px;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(255,179,0,.25);padding:.3rem .75rem;border-radius:100px}
+#clock{font-family:var(--fd);font-size:1rem;letter-spacing:2px;color:var(--sub)}
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="common-nav.css" />
-  <link rel="stylesheet" href="classificacao.css" />
+/* PODIUM */
+.podium-section{padding:2rem 1.5rem 1rem}
+.section-label{font-family:var(--fd);font-size:.75rem;letter-spacing:4px;color:var(--sub);margin-bottom:1.25rem}
+.podium{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;max-width:700px;margin:0 auto}
+@media(min-width:700px){.podium{grid-template-columns:1fr 1.15fr 1fr;align-items:end}}
+
+.podium-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1rem;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+.podium-card:hover{transform:translateY(-3px)}
+.podium-card.p1{border-color:rgba(255,179,0,.4);background:linear-gradient(160deg,#141923 60%,rgba(255,179,0,.06))}
+.podium-card.p2{border-color:rgba(155,168,181,.3)}
+.podium-card.p3{border-color:rgba(205,127,50,.3)}
+
+.podium-rank{font-family:var(--fd);font-size:2.5rem;line-height:1;margin-bottom:.5rem}
+.p1 .podium-rank{color:var(--gold)}
+.p2 .podium-rank{color:var(--silver)}
+.p3 .podium-rank{color:var(--bronze)}
+
+.podium-avatar{width:52px;height:52px;border-radius:50%;margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.4rem;letter-spacing:1px;position:relative}
+.p1 .podium-avatar{background:var(--gold-dim);border:2px solid var(--gold);color:var(--gold)}
+.p2 .podium-avatar{background:rgba(155,168,181,.1);border:2px solid var(--silver);color:var(--silver)}
+.p3 .podium-avatar{background:rgba(205,127,50,.1);border:2px solid var(--bronze);color:var(--bronze)}
+
+.crown{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:1.1rem;animation:crown-bob 2s ease infinite}
+@keyframes crown-bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px)}}
+
+.podium-name{font-family:var(--fd);font-size:1.1rem;letter-spacing:2px;margin-bottom:.4rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.podium-pts{font-family:var(--fd);font-size:1.8rem;color:var(--lime);line-height:1}
+.podium-pts-label{font-size:.7rem;letter-spacing:2px;color:var(--sub)}
+.podium-stats{display:flex;justify-content:center;gap:.75rem;margin-top:.75rem;font-size:.75rem;color:var(--sub)}
+.podium-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;margin-top:.75rem}
+.badge{display:inline-flex;align-items:center;gap:.2rem;padding:.2rem .5rem;border-radius:4px;font-size:.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.badge-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(255,179,0,.3)}
+.badge-green{background:var(--lime-dim);color:var(--lime);border:1px solid rgba(0,230,118,.3)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,.3)}
+.badge-silver{background:rgba(155,168,181,.1);color:var(--silver);border:1px solid rgba(155,168,181,.3)}
+
+/* GLOW for leader */
+.p1::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,rgba(255,179,0,.08),transparent 65%);pointer-events:none}
+
+/* RANKING TABLE */
+.ranking-section{padding:.5rem 1.5rem 2rem}
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface);border-bottom:1px solid var(--border)}
+th{font-family:var(--fd);font-size:.8rem;letter-spacing:2px;color:var(--sub);padding:.7rem .9rem;text-align:left;white-space:nowrap}
+th:not(:first-child){text-align:right}
+th:first-child{text-align:center;width:50px}
+td{padding:.75rem .9rem;border-bottom:1px solid var(--border);font-size:.95rem;font-weight:500;vertical-align:middle}
+td:not(:first-child){text-align:right}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+tr.rank-1 td{background:rgba(255,179,0,.04)}
+
+/* RANK CELL */
+.rank-cell{display:flex;align-items:center;justify-content:center;gap:.35rem}
+.rank-num{font-family:var(--fd);font-size:1rem;letter-spacing:1px;color:var(--sub);min-width:18px;text-align:center}
+.trend{font-size:.65rem;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:1px}
+.trend-up{color:var(--lime)}
+.trend-down{color:var(--red)}
+.trend-same{color:var(--muted)}
+
+/* NAME CELL */
+.name-cell{display:flex;align-items:center;gap:.6rem}
+.player-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.75rem;background:var(--surface);border:1px solid var(--border);color:var(--sub);flex-shrink:0}
+.player-name-link{color:var(--text);text-decoration:none;font-weight:600;letter-spacing:.5px;transition:color .2s}
+.player-name-link:hover{color:var(--lime)}
+.inline-badges{display:flex;gap:.25rem;align-items:center}
+
+/* PTS cell */
+.pts-cell{font-family:var(--fd);font-size:1.15rem;color:var(--lime);letter-spacing:1px}
+
+/* BREAKDOWN tooltip */
+.breakdown-wrap{position:relative;cursor:help}
+.breakdown-wrap:hover .breakdown-tip{opacity:1;pointer-events:auto;transform:translateY(-4px)}
+.breakdown-tip{position:absolute;right:0;bottom:calc(100% + 8px);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;width:170px;font-size:.72rem;z-index:10;opacity:0;pointer-events:none;transform:translateY(0);transition:.2s;white-space:nowrap}
+.breakdown-tip::after{content:'';position:absolute;bottom:-5px;right:12px;width:8px;height:8px;background:var(--surface);border-right:1px solid var(--border);border-bottom:1px solid var(--border);transform:rotate(45deg)}
+.bd-row{display:flex;justify-content:space-between;gap:.75rem;padding:.15rem 0;color:var(--sub)}
+.bd-row span:last-child{color:var(--text)}
+.bd-total{border-top:1px solid var(--border);margin-top:.4rem;padding-top:.4rem;font-weight:700;color:var(--lime);display:flex;justify-content:space-between}
+
+/* PROGRESS bar */
+.progress-cell{min-width:80px}
+.prog-bar{height:4px;background:var(--muted);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--lime);border-radius:2px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+
+/* MOBILE TABLE - hide some cols */
+@media(max-width:600px){
+  .col-d,.col-e,.col-inf,.col-prog{display:none}
+  th,td{padding:.6rem .6rem}
+}
+
+/* CARDS SECTION */
+.cards-section{padding:.5rem 1.5rem 3rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem}
+.player-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1rem;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;animation:slide-up .4s ease both}
+.player-card:hover{transform:translateY(-2px);border-color:rgba(0,230,118,.2)}
+@keyframes slide-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card-rank-num{font-family:var(--fd);font-size:3.5rem;color:rgba(255,255,255,.04);position:absolute;right:.75rem;top:-.25rem;line-height:1;pointer-events:none}
+.card-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.card-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:1.1rem;flex-shrink:0}
+.card-rank-1 .card-avatar{background:var(--gold-dim);border:2px solid var(--gold);color:var(--gold)}
+.card-rank-2 .card-avatar{background:rgba(155,168,181,.1);border:2px solid var(--silver);color:var(--silver)}
+.card-rank-3 .card-avatar{background:rgba(205,127,50,.1);border:2px solid var(--bronze);color:var(--bronze)}
+.card-avatar-default{background:var(--surface);border:1px solid var(--border);color:var(--sub)}
+.card-info{flex:1;min-width:0}
+.card-name{font-family:var(--fd);font-size:1.05rem;letter-spacing:1px;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-pts{font-family:var(--fd);font-size:.85rem;color:var(--lime);letter-spacing:1px}
+.card-badges-row{display:flex;flex-wrap:wrap;gap:.25rem;margin-bottom:.75rem;min-height:20px}
+.card-prog-wrap{margin-bottom:.6rem}
+.card-prog-label{display:flex;justify-content:space-between;font-size:.65rem;color:var(--sub);margin-bottom:.25rem;letter-spacing:.5px}
+.card-stats-row{display:flex;justify-content:space-between;font-size:.78rem;color:var(--sub)}
+.card-stat{display:flex;flex-direction:column;align-items:center;gap:.1rem}
+.card-stat-val{font-family:var(--fd);font-size:1rem;color:var(--text)}
+
+/* FOOTER */
+footer{padding:1.5rem;text-align:center;border-top:1px solid var(--border);font-size:.75rem;color:var(--muted);letter-spacing:2px;font-family:var(--fd)}
+
+/* FEEDBACK */
+#feedback{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:.6rem 1.5rem;font-family:var(--fd);font-size:.85rem;letter-spacing:2px;color:var(--lime);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:9998;white-space:nowrap}
+#feedback.show{transform:translateX(-50%) translateY(0)}
+
+/* SPINNER */
+.spinner{display:flex;justify-content:center;padding:3rem;color:var(--sub);font-family:var(--fd);letter-spacing:3px;font-size:.85rem;gap:.75rem;align-items:center}
+.spin-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);animation:blink 1.2s ease infinite}
+.spin-dot:nth-child(2){animation-delay:.2s}
+.spin-dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.15}40%{opacity:1}}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--sub);font-family:var(--fd);letter-spacing:3px;font-size:1rem}
+</style>
 </head>
-
 <body>
 
-  <!-- ================= HEADER ================= -->
-  <header class="app-header">
-    <div class="brand">
-      <img
-        src="futponts_large.png"
-        alt=""
-        aria-hidden="true"
-        class="brand-logo"
-      />
+<header>
+  <div class="logo">FutPontos<em>Classificação Geral</em></div>
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Jogadores</a></li>
+      <li><a href="goleiros.html">Goleiros</a></li>
+    </ul>
+  </nav>
+  <div class="header-right">
+    <div class="season-badge">Temporada 2026</div>
+    <div id="clock"></div>
+  </div>
+</header>
+
+<main>
+
+  <!-- PÓDIO TOP 3 -->
+  <section class="podium-section">
+    <div class="section-label">🏆 Pódio</div>
+    <div class="podium" id="podium">
+      <div class="spinner"><div class="spin-dot"></div><div class="spin-dot"></div><div class="spin-dot"></div>Carregando...</div>
     </div>
+  </section>
 
-    <button class="menu-toggle" aria-label="Abrir menu">☰</button>
+  <!-- TABELA -->
+  <section class="ranking-section">
+    <div class="section-label">📊 Classificação Completa</div>
+    <div class="table-wrap">
+      <table aria-label="Classificação geral">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jogador</th>
+            <th>Pts</th>
+            <th>V</th>
+            <th>G</th>
+            <th class="col-d">D</th>
+            <th class="col-e">E</th>
+            <th class="col-inf">INF</th>
+            <th class="col-prog">Prog.</th>
+          </tr>
+        </thead>
+        <tbody id="rank-tbody">
+          <tr><td colspan="9"><div class="spinner"><div class="spin-dot"></div><div class="spin-dot"></div><div class="spin-dot"></div>Carregando...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    <nav class="app-nav">
-      <ul>
-        <li>
-          <a href="index.html" class="active">Classificação</a>
-        </li>
-        <li>
-          <a href="goleiros.html">Goleiros</a>
-        </li>
-      </ul>
-    </nav>
-  </header>
+  <!-- CARDS VISUAIS -->
+  <section class="cards-section">
+    <div class="section-label">🔥 Ranking Visual</div>
+    <div class="cards-grid" id="cards-grid">
+    </div>
+  </section>
 
-  <!-- ================= MAIN ================= -->
-  <main class="app-main">
+</main>
 
-    <!-- ===== CLASSIFICAÇÃO ===== -->
-    <section class="classification-section">
-      <header class="section-header">
-        <h2>🏆 Classificação Geral Individual</h2>
-      </header>
+<footer>© 2026 • FutPontos</footer>
+<div id="feedback" aria-live="polite"></div>
 
-      <div class="table-wrapper">
-        <img
-          src="futponts_large.png"
-          alt=""
-          aria-hidden="true"
-          class="table-watermark"
-        />
+<script>
+/* ── CONFIG ─────────────────────────────────────── */
+const API_BASE = "https://sua-api.com"; // ← altere para URL da sua API
 
-        <table aria-label="Tabela de classificação geral">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jog</th>
-              <th>P</th>
-              <th>V</th>
-              <th>G</th>
-              <th>D</th>
-              <th>E</th>
-              <th>INF</th>
-            </tr>
-          </thead>
-          <tbody id="playerList"></tbody>
-        </table>
+/* ── PONTUAÇÃO ──────────────────────────────────── */
+// Ajuste os pesos conforme sua regra de negócio
+const W = { vitorias:3, empates:1, gols:1, defesas:1, infracoes:-2 };
+function calcPoints(j){
+  return (j.vitorias||0)*W.vitorias + (j.empate||0)*W.empates +
+         (j.gols||0)*W.gols + (j.defesa||0)*W.defesas + (j.infracoes||0)*W.infracoes;
+}
+function breakdown(j){
+  const v=(j.vitorias||0), e=(j.empate||0), g=(j.gols||0), d=(j.defesa||0), i=(j.infracoes||0);
+  return [
+    {label:"Vitórias",val:v,pts:v*W.vitorias,icon:"🏆"},
+    {label:"Empates", val:e,pts:e*W.empates, icon:"🤝"},
+    {label:"Gols",    val:g,pts:g*W.gols,    icon:"⚽"},
+    {label:"Defesas", val:d,pts:d*W.defesas,  icon:"🧤"},
+    {label:"Infrações",val:i,pts:i*W.infracoes,icon:"🟥"},
+  ];
+}
+
+/* ── BADGES ─────────────────────────────────────── */
+function getBadges(j,rank,all){
+  const badges=[];
+  if(rank===1) badges.push({icon:"👑",label:"Líder",cls:"badge-gold"});
+  const maxGols=Math.max(...all.map(p=>p.gols||0));
+  const maxDef=Math.max(...all.map(p=>p.defesa||0));
+  const maxVit=Math.max(...all.map(p=>p.vitorias||0));
+  if(maxGols>0&&(j.gols||0)===maxGols) badges.push({icon:"⚽",label:"Artilheiro",cls:"badge-green"});
+  if(maxDef>0&&(j.defesa||0)===maxDef) badges.push({icon:"🧤",label:"Muralha",cls:"badge-silver"});
+  if(maxVit>0&&(j.vitorias||0)===maxVit&&rank!==1) badges.push({icon:"⚡",label:"Máquina",cls:"badge-green"});
+  if((j.infracoes||0)===0&&(j.vitorias||0)>0) badges.push({icon:"😇",label:"Fair Play",cls:"badge-silver"});
+  if((j.vitorias||0)>=10) badges.push({icon:"🔥",label:"Veterano",cls:"badge-gold"});
+  return badges;
+}
+
+/* ── TENDÊNCIA ──────────────────────────────────── */
+const PREV_KEY="fp_prev_rank";
+function getTrend(id,rank){
+  try{
+    const prev=JSON.parse(localStorage.getItem(PREV_KEY)||"{}");
+    const p=prev[id];
+    if(p===undefined) return null;
+    if(p>rank) return {dir:"up",delta:p-rank};
+    if(p<rank) return {dir:"down",delta:rank-p};
+    return {dir:"same"};
+  }catch{return null}
+}
+function savePrev(players){
+  try{
+    const snap={};
+    players.forEach((p,i)=>snap[p.id]=i+1);
+    localStorage.setItem(PREV_KEY,JSON.stringify(snap));
+  }catch{}
+}
+
+/* ── INICIAIS ───────────────────────────────────── */
+function initials(name){
+  const parts=(name||"?").split(" ");
+  return (parts[0][0]+(parts[1]?parts[1][0]:"")).toUpperCase();
+}
+
+/* ── RENDER TENDÊNCIA ───────────────────────────── */
+function renderTrend(trend){
+  if(!trend) return '<span class="trend trend-same">—</span>';
+  if(trend.dir==="up") return `<span class="trend trend-up">▲${trend.delta}</span>`;
+  if(trend.dir==="down") return `<span class="trend trend-down">▼${trend.delta}</span>`;
+  return '<span class="trend trend-same">—</span>';
+}
+
+/* ── RENDER BADGES HTML ─────────────────────────── */
+function renderBadges(badges){
+  return badges.map(b=>`<span class="badge ${b.cls}">${b.icon} ${b.label}</span>`).join("");
+}
+
+/* ── RENDER BREAKDOWN TIP ───────────────────────── */
+function renderBreakdown(j){
+  const rows=breakdown(j);
+  const total=rows.reduce((s,r)=>s+r.pts,0);
+  const positiveRows=rows.filter(r=>r.val>0||r.pts!==0);
+  return `<div class="breakdown-wrap">
+    <span class="pts-cell">${total}</span>
+    <div class="breakdown-tip">
+      ${positiveRows.map(r=>`<div class="bd-row"><span>${r.icon} ${r.label} ×${r.val}</span><span>${r.pts>0?"+":""}${r.pts}</span></div>`).join("")}
+      <div class="bd-total"><span>Total</span><span>${total} pts</span></div>
+    </div>
+  </div>`;
+}
+
+/* ── PÓDIO ──────────────────────────────────────── */
+function renderPodium(players){
+  const podium=document.getElementById("podium");
+  if(players.length<1){podium.innerHTML='<div class="empty-state">Sem jogadores</div>';return}
+  const order=[1,0,2]; // Silver left, Gold center, Bronze right
+  const labels=["🥈","🥇","🥉"];
+  const classes=["p2","p1","p3"];
+  const colorMap=[["var(--silver)","rgba(155,168,181,.08)"],["var(--gold)","rgba(255,179,0,.08)"],["var(--bronze)","rgba(205,127,50,.08)"]];
+
+  podium.innerHTML=order.map((idx,col)=>{
+    if(!players[idx]) return "";
+    const j=players[idx],rank=idx+1;
+    const badges=getBadges(j,rank,players);
+    const pc=classes[col];
+    return `<div class="podium-card ${pc}">
+      ${pc==="p1"?'<span class="crown">👑</span>':""}
+      <div class="podium-rank">${labels[col]}</div>
+      <div class="podium-avatar"><span>${initials(j.nome)}</span></div>
+      <div class="podium-name">${j.nome}</div>
+      <div class="podium-pts">${j.pontos}</div>
+      <div class="podium-pts-label">pontos</div>
+      <div class="podium-stats">
+        <span>🏆 ${j.vitorias||0}</span>
+        <span>⚽ ${j.gols||0}</span>
+        <span>🧤 ${j.defesa||0}</span>
       </div>
-    </section>
+      ${badges.length?`<div class="podium-badges">${renderBadges(badges)}</div>`:""}
+    </div>`;
+  }).join("");
+}
 
-    <!-- ===== RANKING VISUAL ===== -->
-    <section class="cards-section">
-      <header class="section-header">
-        <h2>🔥 Ranking Visual</h2>
-      </header>
+/* ── TABELA ─────────────────────────────────────── */
+function renderTable(players){
+  const tbody=document.getElementById("rank-tbody");
+  if(!players.length){
+    tbody.innerHTML='<tr><td colspan="9"><div class="empty-state">Nenhum jogador cadastrado.</div></td></tr>';
+    return;
+  }
+  const maxPts=players[0].pontos||1;
+  tbody.innerHTML=players.map((j,i)=>{
+    const rank=i+1;
+    const trend=getTrend(j.id,rank);
+    const badges=getBadges(j,rank,players);
+    const pct=Math.round((j.pontos/maxPts)*100);
+    const rowCls=rank===1?"rank-1":"";
+    return `<tr class="${rowCls}" style="animation:slide-up .35s ${Math.min(i,.12)*i+.05}s both">
+      <td>
+        <div class="rank-cell">
+          <span class="rank-num">${rank}</span>
+          ${renderTrend(trend)}
+        </div>
+      </td>
+      <td>
+        <div class="name-cell">
+          <div class="player-avatar">${initials(j.nome)}</div>
+          <a href="jogador.html?id=${j.id}" class="player-name-link">${j.nome}</a>
+          <div class="inline-badges">${badges.slice(0,2).map(b=>`<span title="${b.label}">${b.icon}</span>`).join("")}</div>
+        </div>
+      </td>
+      <td>${renderBreakdown(j)}</td>
+      <td>${j.vitorias||0}</td>
+      <td>${j.gols||0}</td>
+      <td class="col-d">${j.defesa||0}</td>
+      <td class="col-e">${j.empate||0}</td>
+      <td class="col-inf" style="color:${(j.infracoes||0)>0?"var(--red)":"inherit"}">${j.infracoes||0}</td>
+      <td class="col-prog">
+        <div class="progress-cell">
+          <div class="prog-bar"><div class="prog-fill" style="width:0" data-pct="${pct}"></div></div>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
 
-      <div
-        id="rankingCards"
-        class="cards"
-        aria-live="polite"
-      ></div>
-    </section>
+  // Anima progress bars
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(".prog-fill").forEach(el=>{
+      setTimeout(()=>el.style.width=el.dataset.pct+"%",100);
+    });
+  });
+}
 
-  </main>
+/* ── CARDS ──────────────────────────────────────── */
+function renderCards(players){
+  const grid=document.getElementById("cards-grid");
+  if(!players.length){grid.innerHTML="";return}
+  const maxPts=players[0].pontos||1;
+  const rankClasses=["card-rank-1","card-rank-2","card-rank-3"];
 
-  <!-- ================= FOOTER ================= -->
-  <footer class="app-footer">
-    <div class="footer-content">
-      <img
-        src="futponts_large.png"
-        alt=""
-        aria-hidden="true"
-        class="footer-logo"
-      />
-      <span>© 2026 • FutPontos</span>
-    </div>
-  </footer>
+  grid.innerHTML=players.map((j,i)=>{
+    const rank=i+1;
+    const badges=getBadges(j,rank,players);
+    const pct=Math.round((j.pontos/maxPts)*100);
+    const ptsToLeader=i===0?0:players[0].pontos-j.pontos;
+    const avatarCls=rank<=3?rankClasses[rank-1]:"card-avatar-default";
+    const trend=getTrend(j.id,rank);
+    const trendHtml=trend&&trend.dir!=="same"
+      ?`<span class="trend ${trend.dir==="up"?"trend-up":"trend-down"}">${trend.dir==="up"?"▲":"▼"}${trend.delta}</span>`
+      :"";
 
-  <!-- FEEDBACK GLOBAL -->
-  <div id="feedback" aria-live="polite"></div>
+    return `<div class="player-card" style="animation-delay:${Math.min(i,10)*.045}s">
+      <div class="card-rank-num">${rank}</div>
+      <div class="card-top">
+        <div class="card-avatar ${avatarCls}">${initials(j.nome)}</div>
+        <div class="card-info">
+          <div class="card-name">${j.nome} ${trendHtml}</div>
+          <div class="card-pts">${j.pontos} pts ${ptsToLeader>0?`<span style="color:var(--sub);font-size:.75rem">(-${ptsToLeader})</span>`:""}</div>
+        </div>
+      </div>
+      ${badges.length?`<div class="card-badges-row">${renderBadges(badges)}</div>`:`<div class="card-badges-row"></div>`}
+      <div class="card-prog-wrap">
+        <div class="card-prog-label"><span>Vs. líder</span><span>${pct}%</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:0" data-pct="${pct}"></div></div>
+      </div>
+      <div class="card-stats-row">
+        <div class="card-stat"><span class="card-stat-val">${j.vitorias||0}</span><span>Vit.</span></div>
+        <div class="card-stat"><span class="card-stat-val">${j.gols||0}</span><span>Gols</span></div>
+        <div class="card-stat"><span class="card-stat-val">${j.defesa||0}</span><span>Def.</span></div>
+        <div class="card-stat"><span class="card-stat-val">${j.empate||0}</span><span>Emp.</span></div>
+        <div class="card-stat"><span class="card-stat-val" style="color:${(j.infracoes||0)>0?"var(--red)":"inherit"}">${j.infracoes||0}</span><span>Inf.</span></div>
+      </div>
+    </div>`;
+  }).join("");
 
-  <!-- JS -->
-  <script type="module" src="./globais.js" defer></script>
-  <script type="module" src="./classificacao.js" defer></script>
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(".prog-fill").forEach(el=>{
+      setTimeout(()=>el.style.width=el.dataset.pct+"%",200);
+    });
+  });
+}
 
+/* ── API ────────────────────────────────────────── */
+async function apiGet(path){
+  const r=await fetch(API_BASE+path,{signal:AbortSignal.timeout(8000)});
+  if(!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+/* ── LOAD ───────────────────────────────────────── */
+async function load(){
+  try{
+    const jogadores=await apiGet("/jogadores");
+    if(!Array.isArray(jogadores)) throw new Error("Resposta inválida");
+
+    jogadores.forEach(j=>{
+      j.vitorias=Number(j.vitorias)||0;
+      j.empate=Number(j.empate)||0;
+      j.defesa=Number(j.defesa)||0;
+      j.gols=Number(j.gols)||0;
+      j.infracoes=Number(j.infracoes)||0;
+      j.pontos=Number(j.pontos)||calcPoints(j);
+    });
+
+    jogadores.sort((a,b)=>b.pontos-a.pontos);
+
+    renderPodium(jogadores);
+    renderTable(jogadores);
+    renderCards(jogadores);
+    savePrev(jogadores);
+
+  }catch(err){
+    console.error(err);
+    document.getElementById("rank-tbody").innerHTML=
+      '<tr><td colspan="9"><div class="empty-state">Erro ao carregar dados. Verifique a API.</div></td></tr>';
+    document.getElementById("podium").innerHTML=
+      '<div class="empty-state" style="grid-column:1/-1">Sem conexão com a API</div>';
+  }
+}
+
+/* ── CLOCK ──────────────────────────────────────── */
+function tick(){
+  document.getElementById("clock").textContent=
+    new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+}
+
+/* ── INIT ───────────────────────────────────────── */
+tick(); setInterval(tick,1000);
+load(); setInterval(load,30000);
+</script>
 </body>
 </html>
