@@ -12,140 +12,206 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-VVYJFM295R', { anonymize_ip: true, page_title: document.title, page_path: window.location.pathname });
+    gtag('config', 'G-VVYJFM295R', {
+      anonymize_ip: true,
+      page_title: document.title,
+      page_path: window.location.pathname
+    });
   </script>
 
-  <!-- CSS externos -->
   <link rel="stylesheet" href="common-nav.css" />
   <link rel="stylesheet" href="classificacao.css" />
 
-  <!-- Melhorias de gamificação (inline para não depender de arquivo extra) -->
   <style>
-    /* ── PÓDIO ─────────────────────────────────── */
-    .podium-section { padding: 1.5rem 0 .5rem; }
-    .podium-section .section-header { margin-bottom: 1rem; }
-
-    .podium {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr 1fr;
-      gap: .75rem;
-      max-width: 680px;
-      margin: 0 auto;
-      align-items: end;
+    /* ── ANIMAÇÕES GLOBAIS ───────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    @media (max-width: 480px) {
-      .podium { grid-template-columns: 1fr; max-width: 280px; }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes progressFill {
+      from { width: 0; }
     }
 
-    .podium-card {
-      border-radius: 12px;
-      padding: 1.1rem .85rem;
-      text-align: center;
+    /* ── TABELA — melhorias mínimas ──────────── */
+
+    /* Linha hover suave */
+    #playerList tr {
+      transition: background .15s;
+      animation: fadeUp .3s ease both;
+    }
+    #playerList tr:hover {
+      background: rgba(255,255,255,.03);
+      cursor: default;
+    }
+
+    /* Tendência ao lado do número da posição */
+    .trend {
+      font-size: .65rem;
+      font-weight: 700;
+      margin-left: .25rem;
+      vertical-align: middle;
+      letter-spacing: 0;
+    }
+    .trend-up   { color: #27c97e; }
+    .trend-down { color: #e8445a; }
+
+    /* Link no nome do jogador */
+    .player-link {
+      color: inherit;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .player-link:hover { opacity: .7; }
+
+    /* Barra de progresso na coluna P */
+    .pts-cell {
       position: relative;
+      white-space: nowrap;
+    }
+    .pts-bar {
+      display: block;
+      height: 2px;
+      border-radius: 1px;
+      background: rgba(255,255,255,.08);
+      margin-top: 3px;
       overflow: hidden;
-      border: 1px solid var(--border-color, #2a2a2a);
-      transition: transform .2s;
     }
-    .podium-card:hover { transform: translateY(-3px); }
-
-    .podium-card.p1 { order: 2; }
-    .podium-card.p2 { order: 1; }
-    .podium-card.p3 { order: 3; }
-    @media (max-width: 480px) {
-      .podium-card.p1 { order: 1; }
-      .podium-card.p2 { order: 2; }
-      .podium-card.p3 { order: 3; }
+    .pts-bar-fill {
+      display: block;
+      height: 100%;
+      border-radius: 1px;
+      animation: progressFill .7s cubic-bezier(.34,1.56,.64,1) both;
     }
 
-    .podium-medal { font-size: 1.8rem; display: block; margin-bottom: .4rem; line-height: 1; }
-    .crown        { display: block; font-size: 1rem; margin-bottom: .15rem; animation: crown-bob 2.5s ease infinite; }
-    @keyframes crown-bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-
-    .podium-avatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      margin: 0 auto .6rem;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: .9rem;
+    /* Tooltip de breakdown ao hover na célula de pontos */
+    .pts-wrap {
+      position: relative;
+      display: inline-block;
+      cursor: default;
     }
-    .podium-name  { font-weight: 700; font-size: .9rem; margin-bottom: .3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .podium-pts   { font-size: 1.6rem; font-weight: 800; line-height: 1; }
-    .podium-pts-label { font-size: .62rem; opacity: .5; letter-spacing: 2px; text-transform: uppercase; }
-    .podium-mini  { display: flex; justify-content: center; gap: .5rem; font-size: .72rem; opacity: .6; margin-top: .5rem; }
-
-    .podium-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem; margin-top: .6rem; }
-
-    /* ── BADGES ────────────────────────────────── */
-    .badge {
-      display: inline-flex; align-items: center; gap: .2rem;
-      padding: .15rem .45rem; border-radius: 4px;
-      font-size: .62rem; font-weight: 700; letter-spacing: .8px;
-      text-transform: uppercase; border: 1px solid;
-    }
-
-    /* ── TENDÊNCIA NA TABELA ───────────────────── */
-    .trend { font-size: .65rem; font-weight: 700; vertical-align: middle; margin-left: .2rem; }
-    .trend-up   { color: #00c975; }
-    .trend-down { color: #ff4757; }
-    .trend-same { opacity: .3; }
-
-    /* ── NOME COM BADGES INLINE ────────────────── */
-    .player-name-cell  { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
-    .player-name-link  { text-decoration: none; color: inherit; transition: color .2s; }
-    .player-name-link:hover { color: var(--accent-color, #4caf50); }
-    .icon-badges { display: flex; gap: .2rem; }
-
-    /* ── BREAKDOWN TOOLTIP ─────────────────────── */
-    .pts-wrap     { position: relative; cursor: help; display: inline-block; }
-    .pts-tip      {
-      position: absolute; bottom: calc(100% + 6px); right: 0;
-      background: var(--surface-color, #1a1a1a);
-      border: 1px solid var(--border-color, #333);
-      border-radius: 8px; padding: .55rem .75rem;
-      min-width: 165px; font-size: .72rem; z-index: 20;
-      opacity: 0; pointer-events: none;
-      transform: translateY(4px); transition: .2s;
-      text-align: left; white-space: nowrap;
+    .pts-tip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: var(--surface-color, #1c1c1c);
+      border: 1px solid var(--border-color, #2e2e2e);
+      border-radius: 8px;
+      padding: .55rem .75rem;
+      min-width: 160px;
+      font-size: .72rem;
+      line-height: 1.6;
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s, transform .18s;
+      text-align: left;
+      white-space: nowrap;
     }
     .pts-tip::after {
-      content: ''; position: absolute; bottom: -5px; right: 10px;
-      width: 8px; height: 8px;
-      background: var(--surface-color, #1a1a1a);
-      border-right: 1px solid var(--border-color, #333);
-      border-bottom: 1px solid var(--border-color, #333);
-      transform: rotate(45deg);
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--border-color, #2e2e2e);
     }
-    .pts-wrap:hover .pts-tip { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .bd-row  { display: flex; justify-content: space-between; gap: 1rem; padding: .1rem 0; opacity: .7; }
+    .pts-wrap:hover .pts-tip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .bd-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      opacity: .65;
+    }
     .bd-row span:last-child { opacity: 1; font-weight: 600; }
+    .bd-sep {
+      border: none;
+      border-top: 1px solid var(--border-color, #2e2e2e);
+      margin: .3rem 0;
+    }
     .bd-total {
-      display: flex; justify-content: space-between; gap: 1rem;
-      border-top: 1px solid var(--border-color, #333);
-      margin-top: .3rem; padding-top: .3rem; font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-weight: 700;
     }
 
-    /* ── PROGRESS BAR NA TABELA ────────────────── */
-    .prog-bar  { width: 64px; height: 4px; border-radius: 2px; background: rgba(128,128,128,.2); overflow: hidden; }
-    .prog-fill { height: 100%; border-radius: 2px; transition: width .8s cubic-bezier(.34,1.56,.64,1); }
+    /* Infrações destacadas */
+    .inf-warn { color: #e8445a; }
 
-    /* ── CARDS MELHORADOS ──────────────────────── */
-    .player-card .card-badges { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; min-height: 20px; }
-    .player-card .card-prog   { margin: .5rem 0 .25rem; }
-    .player-card .card-prog-labels { display: flex; justify-content: space-between; font-size: .62rem; opacity: .5; margin-bottom: .25rem; }
-    .player-card .prog-bar { width: 100%; }
-    .player-card .pts-diff  { font-size: .72rem; opacity: .5; margin-left: .3rem; }
-    .player-card .trend-tag { font-size: .7rem; font-weight: 700; margin-left: .3rem; }
+    /* ── RANKING VISUAL — melhorias ──────────── */
+    #rankingCards .player-card {
+      animation: fadeUp .4s ease both;
+      transition: transform .2s, box-shadow .2s;
+    }
+    #rankingCards .player-card:hover {
+      transform: translateY(-3px);
+    }
 
-    /* ── SPINNER ───────────────────────────────── */
-    .fp-spinner { display: flex; justify-content: center; align-items: center; gap: .5rem; padding: 2.5rem; opacity: .5; font-size: .85rem; letter-spacing: 2px; }
-    .fp-spinner span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: fp-blink 1.2s ease infinite; }
-    .fp-spinner span:nth-child(2) { animation-delay: .2s; }
-    .fp-spinner span:nth-child(3) { animation-delay: .4s; }
-    @keyframes fp-blink { 0%,80%,100%{opacity:.15} 40%{opacity:1} }
+    /* Barra de progresso no card */
+    .card-progress {
+      margin: .6rem 0 .4rem;
+    }
+    .card-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .65rem;
+      opacity: .45;
+      margin-bottom: .3rem;
+    }
+    .card-progress .pts-bar {
+      background: rgba(255,255,255,.08);
+    }
+    .card-progress .pts-bar-fill {
+      animation-delay: .2s;
+    }
 
-    .fp-error { text-align: center; padding: 2rem; opacity: .5; font-size: .85rem; }
+    /* Diferença para o líder */
+    .pts-diff {
+      font-size: .72rem;
+      opacity: .45;
+      margin-left: .3rem;
+    }
 
-    /* ── COLUNA PROGRESS — ocultar em mobile ───── */
-    @media (max-width: 560px) { .col-prog { display: none; } }
+    /* ── SPINNER ─────────────────────────────── */
+    .fp-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: 2.5rem 1rem;
+      opacity: .4;
+      font-size: .8rem;
+      letter-spacing: .1em;
+    }
+    .fp-loading i {
+      display: inline-flex;
+      gap: 4px;
+    }
+    .fp-loading i span {
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: fadeIn .9s ease infinite alternate;
+    }
+    .fp-loading i span:nth-child(2) { animation-delay: .2s; }
+    .fp-loading i span:nth-child(3) { animation-delay: .4s; }
+
+    .fp-error {
+      padding: 2rem;
+      text-align: center;
+      opacity: .45;
+      font-size: .85rem;
+    }
   </style>
 </head>
 <body>
@@ -167,20 +233,10 @@
   <!-- ================= MAIN ================= -->
   <main class="app-main">
 
-    <!-- ===== PÓDIO (novo) ===== -->
-    <section class="podium-section">
-      <header class="section-header">
-        <h2>🏅 Pódio</h2>
-      </header>
-      <div class="podium" id="podium">
-        <div class="fp-spinner"><span></span><span></span><span></span> Carregando...</div>
-      </div>
-    </section>
-
     <!-- ===== CLASSIFICAÇÃO ===== -->
     <section class="classification-section">
       <header class="section-header">
-        <h2>🏆 Classificação Geral Individual</h2>
+        <h2>Classificação Geral Individual</h2>
       </header>
       <div class="table-wrapper">
         <img src="futponts_large.png" alt="" aria-hidden="true" class="table-watermark" />
@@ -188,18 +244,21 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Jogador</th>
-              <th>Pts</th>
+              <th>Jog</th>
+              <th>P</th>
               <th>V</th>
               <th>G</th>
               <th>D</th>
               <th>E</th>
               <th>INF</th>
-              <th class="col-prog">Prog.</th>
             </tr>
           </thead>
           <tbody id="playerList">
-            <tr><td colspan="9"><div class="fp-spinner"><span></span><span></span><span></span> Carregando...</div></td></tr>
+            <tr>
+              <td colspan="8">
+                <div class="fp-loading"><i><span></span><span></span><span></span></i> Carregando...</div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -208,7 +267,7 @@
     <!-- ===== RANKING VISUAL ===== -->
     <section class="cards-section">
       <header class="section-header">
-        <h2>🔥 Ranking Visual</h2>
+        <h2>Ranking Visual</h2>
       </header>
       <div id="rankingCards" class="cards" aria-live="polite"></div>
     </section>
@@ -225,13 +284,6 @@
 
   <div id="feedback" aria-live="polite"></div>
 
-  <!-- ─────────────────────────────────────────────
-       JS: mantém globais.js original + reescreve
-       classificacao.js com todas as melhorias.
-       Se preferir manter arquivos separados, mova
-       o conteúdo de "CLASSIFICAÇÃO SCRIPT" para
-       classificacao.js e remova este bloco.
-  ──────────────────────────────────────────────── -->
   <script type="module" src="./globais.js"></script>
 
   <script type="module">
@@ -239,194 +291,121 @@
 
     /* ── CONFIG ──────────────────────────────── */
     const ENDPOINT        = "/jogadores";
-    const UPDATE_INTERVAL = 30000;
-    const PREV_RANK_KEY   = "fp_prev_rank_jogadores";
+    const UPDATE_INTERVAL = 10000;
+    const PREV_KEY        = "fp_prev_rank";
 
-    /* ── PESOS (ajuste conforme sua regra) ───── */
+    /* ── PESOS ────────────────────────────────
+       Ajuste conforme sua função calculatePoints
+       em globais.js, ou remova e use a importada.
+    ─────────────────────────────────────────── */
     const W = { vitorias: 3, empates: 1, gols: 1, defesas: 1, infracoes: -2 };
 
-    function calcPoints(j) {
-      return (j.vitorias  ||0)*W.vitorias
-           + (j.empates   ||0)*W.empates
-           + (j.gols      ||0)*W.gols
-           + (j.defesas   ||0)*W.defesas
-           + (j.infracoes ||0)*W.infracoes;
+    function pontuacao(j) {
+      if (typeof calculatePoints === "function") {
+        return calculatePoints(j.vitorias, j.empates, j.defesas, j.gols, j.infracoes);
+      }
+      return j.vitorias  * W.vitorias
+           + j.empates   * W.empates
+           + j.gols      * W.gols
+           + j.defesas   * W.defesas
+           + j.infracoes * W.infracoes;
+    }
+
+    /* ── NORMALIZA campos da API ─────────────── */
+    function normaliza(j) {
+      j.vitorias  = Number(j.vitorias)  || 0;
+      j.empates   = Number(j.empate)    || 0; // API retorna "empate"
+      j.defesas   = Number(j.defesa)    || 0; // API retorna "defesa"
+      j.gols      = Number(j.gols)      || 0;
+      j.infracoes = Number(j.infracoes) || 0;
+      j.pontos    = Number(j.pontos)    || pontuacao(j);
     }
 
     /* ── TENDÊNCIA ───────────────────────────── */
-    function savePrevRank(players) {
+    function salvarPrev(players) {
       try {
         const snap = {};
         players.forEach((p, i) => snap[p.id] = i + 1);
-        localStorage.setItem(PREV_RANK_KEY, JSON.stringify(snap));
+        localStorage.setItem(PREV_KEY, JSON.stringify(snap));
       } catch {}
     }
 
-    function getTrend(id, rank) {
+    function tendencia(id, rank) {
       try {
-        const prev = JSON.parse(localStorage.getItem(PREV_RANK_KEY) || "{}");
+        const prev = JSON.parse(localStorage.getItem(PREV_KEY) || "{}");
         const p = prev[id];
-        if (p === undefined) return null;
-        if (p > rank)  return { dir: "up",   delta: p - rank };
-        if (p < rank)  return { dir: "down", delta: rank - p };
-        return { dir: "same" };
-      } catch { return null; }
+        if (p === undefined) return "";
+        if (p > rank) return `<span class="trend trend-up"   title="Subiu ${p-rank}">▲</span>`;
+        if (p < rank) return `<span class="trend trend-down" title="Caiu ${rank-p}">▼</span>`;
+        return "";
+      } catch { return ""; }
     }
 
-    function trendHtml(trend) {
-      if (!trend) return "";
-      if (trend.dir === "up")   return `<span class="trend trend-up"   title="Subiu ${trend.delta} posição">▲${trend.delta}</span>`;
-      if (trend.dir === "down") return `<span class="trend trend-down" title="Caiu ${trend.delta} posição">▼${trend.delta}</span>`;
-      return `<span class="trend trend-same">—</span>`;
-    }
+    /* ── BREAKDOWN ───────────────────────────── */
+    function breakdown(j) {
+      const linhas = [
+        { label: "Vitórias",   val: j.vitorias,  mult: W.vitorias  },
+        { label: "Empates",    val: j.empates,   mult: W.empates   },
+        { label: "Gols",       val: j.gols,      mult: W.gols      },
+        { label: "Defesas",    val: j.defesas,   mult: W.defesas   },
+        { label: "Infrações",  val: j.infracoes, mult: W.infracoes },
+      ].filter(r => r.val > 0 || (r.val > 0 && r.mult < 0));
 
-    /* ── BADGES ──────────────────────────────── */
-    function getBadges(j, rank, all) {
-      const badges = [];
-      if (rank === 1) badges.push({ icon: "👑", label: "Líder",      cls: "badge-gold"   });
+      const total = j.pontos;
 
-      const maxGols = Math.max(...all.map(p => p.gols     || 0));
-      const maxDef  = Math.max(...all.map(p => p.defesas  || 0));
-      const maxVit  = Math.max(...all.map(p => p.vitorias || 0));
-
-      if (maxGols > 0 && (j.gols    || 0) === maxGols) badges.push({ icon: "⚽", label: "Artilheiro", cls: "badge-green" });
-      if (maxDef  > 0 && (j.defesas || 0) === maxDef)  badges.push({ icon: "🧤", label: "Muralha",    cls: "badge-blue"  });
-      if (maxVit  > 0 && (j.vitorias|| 0) === maxVit && rank !== 1)
-                                                        badges.push({ icon: "⚡", label: "Máquina",    cls: "badge-green" });
-      if ((j.infracoes || 0) === 0 && (j.vitorias || 0) > 0)
-                                                        badges.push({ icon: "😇", label: "Fair Play",  cls: "badge-gray"  });
-      if ((j.vitorias  || 0) >= 10)                    badges.push({ icon: "🔥", label: "Veterano",   cls: "badge-gold"  });
-      return badges;
-    }
-
-    function renderBadges(badges) {
-      return badges.map(b =>
-        `<span class="badge ${b.cls}" title="${b.label}">${b.icon} ${b.label}</span>`
-      ).join("");
-    }
-
-    /* ── BREAKDOWN TOOLTIP ───────────────────── */
-    function breakdownTip(j) {
-      const rows = [
-        { label: "Vitórias",  val: j.vitorias  || 0, mult: W.vitorias,  icon: "🏆" },
-        { label: "Empates",   val: j.empates   || 0, mult: W.empates,   icon: "🤝" },
-        { label: "Gols",      val: j.gols      || 0, mult: W.gols,      icon: "⚽" },
-        { label: "Defesas",   val: j.defesas   || 0, mult: W.defesas,   icon: "🧤" },
-        { label: "Infrações", val: j.infracoes || 0, mult: W.infracoes, icon: "🟥" },
-      ];
-      const total = rows.reduce((s, r) => s + r.val * r.mult, 0);
-      const active = rows.filter(r => r.val > 0 || r.mult < 0);
-      return `
-        <div class="pts-wrap">
-          <strong>${total}</strong>
-          <div class="pts-tip">
-            ${active.map(r => {
-              const pts = r.val * r.mult;
-              return `<div class="bd-row">
-                <span>${r.icon} ${r.label} ×${r.val}</span>
-                <span>${pts >= 0 ? "+" : ""}${pts}</span>
-              </div>`;
-            }).join("")}
-            <div class="bd-total"><span>Total</span><span>${total} pts</span></div>
-          </div>
-        </div>`;
-    }
-
-    /* ── INICIAIS ────────────────────────────── */
-    function initials(name) {
-      const parts = (name || "?").trim().split(/\s+/);
-      return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
-    }
-
-    /* ── NORMALIZA ───────────────────────────── */
-    function normalize(j) {
-      j.vitorias  = Number(j.vitorias)  || 0;
-      j.empates   = Number(j.empate)    || 0;   // campo vem como "empate" da API
-      j.defesas   = Number(j.defesa)    || 0;   // campo vem como "defesa" da API
-      j.gols      = Number(j.gols)      || 0;
-      j.infracoes = Number(j.infracoes) || 0;
-      j.pontos    = Number(j.pontos)    || calcPoints(j);
-    }
-
-    /* ── PÓDIO ───────────────────────────────── */
-    function renderPodium(players) {
-      const el = document.getElementById("podium");
-      if (!players.length) { el.innerHTML = '<p class="fp-error">Sem jogadores.</p>'; return; }
-
-      // Ordem visual: prata | ouro | bronze
-      const slots = [players[1], players[0], players[2]];
-      const medals = ["🥈", "🥇", "🥉"];
-      const classes = ["p2", "p1", "p3"];
-
-      el.innerHTML = slots.map((j, col) => {
-        if (!j) return "";
-        const rank   = col === 0 ? 2 : col === 1 ? 1 : 3;
-        const badges = getBadges(j, rank, players);
-        return `
-          <div class="podium-card ${classes[col]}">
-            ${col === 1 ? '<span class="crown">👑</span>' : ""}
-            <span class="podium-medal">${medals[col]}</span>
-            <div class="podium-avatar">${initials(j.nome)}</div>
-            <div class="podium-name">${j.nome}</div>
-            <div class="podium-pts">${j.pontos}</div>
-            <div class="podium-pts-label">pontos</div>
-            <div class="podium-mini">
-              <span>🏆 ${j.vitorias}</span>
-              <span>⚽ ${j.gols}</span>
-              <span>🧤 ${j.defesas}</span>
-            </div>
-            ${badges.length ? `<div class="podium-badges">${renderBadges(badges)}</div>` : ""}
-          </div>`;
-      }).join("");
+      return `<div class="pts-wrap">
+        ${total}
+        <div class="pts-tip">
+          ${linhas.map(r => {
+            const pts = r.val * r.mult;
+            return `<div class="bd-row">
+              <span>${r.label} ×${r.val}</span>
+              <span>${pts >= 0 ? "+" : ""}${pts}</span>
+            </div>`;
+          }).join("")}
+          <hr class="bd-sep">
+          <div class="bd-total"><span>Total</span><span>${total}</span></div>
+        </div>
+      </div>`;
     }
 
     /* ── TABELA ──────────────────────────────── */
-    function renderTable(players) {
+    function renderTabela(players) {
       const tbody  = document.getElementById("playerList");
       const maxPts = players[0]?.pontos || 1;
 
       if (!players.length) {
-        tbody.innerHTML = '<tr><td colspan="9"><p class="fp-error">Nenhum jogador.</p></td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8"><p class="fp-error">Nenhum jogador cadastrado.</p></td></tr>';
         return;
       }
 
       tbody.innerHTML = players.map((j, i) => {
-        const rank   = i + 1;
-        const trend  = getTrend(j.id, rank);
-        const badges = getBadges(j, rank, players);
-        const pct    = Math.round((j.pontos / maxPts) * 100);
+        const rank     = i + 1;
+        const trend    = tendencia(j.id, rank);
+        const pct      = Math.round((j.pontos / maxPts) * 100);
+        const barColor = `var(--accent-color, #4caf50)`;
+        const delay    = `${Math.min(i, 12) * 0.04}s`;
 
-        return `
-          <tr style="animation:fadeUp .35s ${Math.min(i, 10) * .04}s both">
-            <td>${rank}${trendHtml(trend)}</td>
-            <td>
-              <div class="player-name-cell">
-                <a href="jogador.html?id=${j.id}" class="player-name-link">${j.nome}</a>
-                <div class="icon-badges">
-                  ${badges.slice(0, 3).map(b => `<span title="${b.label}">${b.icon}</span>`).join("")}
-                </div>
-              </div>
-            </td>
-            <td>${breakdownTip(j)}</td>
-            <td>${j.vitorias}</td>
-            <td>${j.gols}</td>
-            <td>${j.defesas}</td>
-            <td>${j.empates}</td>
-            <td style="${j.infracoes > 0 ? "color:#ff4757" : ""}">${j.infracoes}</td>
-            <td class="col-prog">
-              <div class="prog-bar">
-                <div class="prog-fill" style="width:0" data-pct="${pct}"></div>
-              </div>
-            </td>
-          </tr>`;
+        return `<tr style="animation-delay:${delay}">
+          <td>${rank}${trend}</td>
+          <td>
+            <a href="jogador.html?id=${j.id}" class="player-link">${j.nome}</a>
+          </td>
+          <td class="pts-cell">
+            ${breakdown(j)}
+            <span class="pts-bar">
+              <span class="pts-bar-fill"
+                style="width:${pct}%; background:${barColor}; animation-delay:${delay}">
+              </span>
+            </span>
+          </td>
+          <td>${j.vitorias}</td>
+          <td>${j.gols}</td>
+          <td>${j.defesas}</td>
+          <td>${j.empates}</td>
+          <td class="${j.infracoes > 0 ? "inf-warn" : ""}">${j.infracoes}</td>
+        </tr>`;
       }).join("");
-
-      // Anima barras após render
-      requestAnimationFrame(() => {
-        document.querySelectorAll("#playerList .prog-fill").forEach(el => {
-          setTimeout(() => { el.style.width = el.dataset.pct + "%"; }, 120);
-        });
-      });
     }
 
     /* ── CARDS ───────────────────────────────── */
@@ -434,75 +413,75 @@
       const container = document.getElementById("rankingCards");
       const maxPts    = players[0]?.pontos || 1;
 
-      if (!players.length) { container.innerHTML = '<p class="fp-error">Nenhum jogador.</p>'; return; }
+      if (!players.length) {
+        container.innerHTML = '<p class="fp-error">Nenhum jogador cadastrado.</p>';
+        return;
+      }
 
       container.innerHTML = players.map((j, i) => {
-        const rank       = i + 1;
-        const badges     = getBadges(j, rank, players);
-        const trend      = getTrend(j.id, rank);
-        const pct        = Math.round((j.pontos / maxPts) * 100);
+        const rank        = i + 1;
+        const pct         = Math.round((j.pontos / maxPts) * 100);
         const ptsToLeader = i === 0 ? 0 : players[0].pontos - j.pontos;
+        const delay       = `${Math.min(i, 10) * 0.05}s`;
+        const barColor    = `var(--accent-color, #4caf50)`;
+        const trend       = tendencia(j.id, rank);
 
-        return `
-          <div class="player-card" style="animation-delay:${Math.min(i, 10) * .04}s">
-            <div class="player-rank">#${rank}</div>
-            <div class="player-name">
-              <a href="jogador.html?id=${j.id}" class="player-link">${j.nome}</a>
-              ${trendHtml(trend)}
+        return `<div class="player-card" style="animation-delay:${delay}">
+          <div class="player-rank">#${rank}</div>
+
+          <div class="player-name">
+            <a href="jogador.html?id=${j.id}" class="player-link">${j.nome}</a>
+            ${trend}
+          </div>
+
+          <div class="player-points">
+            ${j.pontos} pts
+            ${ptsToLeader > 0
+              ? `<span class="pts-diff">−${ptsToLeader} do líder</span>`
+              : ""}
+          </div>
+
+          <div class="card-progress">
+            <div class="card-progress-label">
+              <span>vs. líder</span><span>${pct}%</span>
             </div>
-            <div class="player-points">
-              ${j.pontos} pts
-              ${ptsToLeader > 0 ? `<span class="pts-diff">(-${ptsToLeader})</span>` : ""}
-            </div>
-            <div class="card-badges">${renderBadges(badges)}</div>
-            <div class="card-prog">
-              <div class="card-prog-labels"><span>vs. líder</span><span>${pct}%</span></div>
-              <div class="prog-bar">
-                <div class="prog-fill" style="width:0" data-pct="${pct}"></div>
-              </div>
-            </div>
-            <div class="player-stats">
-              <span>🏆 ${j.vitorias}</span>
-              <span>⚽ ${j.gols}</span>
-              <span>🧤 ${j.defesas}</span>
-              <span>🤝 ${j.empates}</span>
-            </div>
-          </div>`;
+            <span class="pts-bar">
+              <span class="pts-bar-fill"
+                style="width:${pct}%; background:${barColor}; animation-delay:${delay}">
+              </span>
+            </span>
+          </div>
+
+          <div class="player-stats">
+            <span>V ${j.vitorias}</span>
+            <span>G ${j.gols}</span>
+            <span>D ${j.defesas}</span>
+            <span>E ${j.empates}</span>
+          </div>
+        </div>`;
       }).join("");
-
-      requestAnimationFrame(() => {
-        document.querySelectorAll("#rankingCards .prog-fill").forEach(el => {
-          setTimeout(() => { el.style.width = el.dataset.pct + "%"; }, 200);
-        });
-      });
     }
 
-    /* ── LOAD PRINCIPAL ──────────────────────── */
+    /* ── LOAD ────────────────────────────────── */
     async function carregarClassificacao() {
       try {
         const jogadores = await apiRequest(ENDPOINT);
         if (!Array.isArray(jogadores)) throw new Error("Resposta inválida da API");
 
-        jogadores.forEach(normalize);
+        jogadores.forEach(normaliza);
         jogadores.sort((a, b) => b.pontos - a.pontos);
 
-        renderPodium(jogadores);
-        renderTable(jogadores);
+        renderTabela(jogadores);
         renderCards(jogadores);
-        savePrevRank(jogadores);
+        salvarPrev(jogadores);
 
       } catch (err) {
         console.error("Erro ao carregar classificação:", err);
 
-        const errMsg = `<tr><td colspan="9"><p class="fp-error">
-          ⚠️ Erro ao carregar dados.<br>
-          <small style="opacity:.5">${err.message || "Verifique a API."}</small>
-        </p></td></tr>`;
-
-        document.getElementById("playerList").innerHTML   = errMsg;
-        document.getElementById("podium").innerHTML       = `<p class="fp-error">Sem conexão com a API.</p>`;
-        document.getElementById("rankingCards").innerHTML = `<p class="fp-error">Sem conexão com a API.</p>`;
-        showFeedback?.("Erro ao carregar dados", "error");
+        document.getElementById("playerList").innerHTML =
+          `<tr><td colspan="8"><p class="fp-error">Erro ao carregar dados.</p></td></tr>`;
+        document.getElementById("rankingCards").innerHTML =
+          `<p class="fp-error">Erro ao carregar dados.</p>`;
       }
     }
 
