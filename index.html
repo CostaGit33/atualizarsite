@@ -8,33 +8,21 @@
 
   <meta name="description" content="Ranking visual, classificação geral, estatísticas e desempenho dos jogadores no FutPontos." />
   <meta name="keywords" content="futebol society, ranking futebol, classificação futebol, futpontos, jogadores, desempenho" />
-  <meta name="author" content="FutPontos" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://semdominio.online/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="FutPontos • Classificação Geral" />
   <meta property="og:description" content="Veja ranking, estatísticas e desempenho dos jogadores." />
-  <meta property="og:url" content="https://semdominio.online/" />
   <meta property="og:image" content="https://semdominio.online/futponts_large.png" />
-
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="FutPontos" />
-  <meta name="twitter:description" content="Classificação geral e ranking visual FutPontos." />
-  <meta name="twitter:image" content="https://semdominio.online/futponts_large.png" />
-
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#07080D" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="FutPontos" />
 
   <link rel="icon" href="futponts_large.png" type="image/png" />
   <link rel="apple-touch-icon" href="futponts_large.png" />
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVYJFM295R"></script>
 
@@ -44,28 +32,9 @@
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .brand-logo {
-      filter: drop-shadow(0 0 10px rgba(255,255,255,.08));
-    }
-
-    .player-card {
-      backdrop-filter: blur(8px);
-      border-radius: 18px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .table-wrapper {
@@ -79,7 +48,6 @@
   </style>
 </head>
 <body>
-  <noscript>Seu navegador precisa ter JavaScript habilitado para utilizar o FutPontos.</noscript>
 
   <header class="app-header">
     <div class="brand">
@@ -147,14 +115,68 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-VVYJFM295R', {
-      anonymize_ip: true,
-      page_title: document.title,
-      page_path: window.location.pathname
-    });
+    gtag('config', 'G-VVYJFM295R');
   </script>
 
   <script type="module" src="./globais.js"></script>
-  <script defer src="menu.js"></script>
+  <script src="menu.js"></script>
+
+  <script type="module">
+    import { apiRequest } from './globais.js';
+
+    async function carregarClassificacao() {
+      try {
+        const jogadores = await apiRequest('/jogadores');
+
+        if (!Array.isArray(jogadores)) {
+          throw new Error('API inválida');
+        }
+
+        jogadores.sort((a, b) => (b.pontos || 0) - (a.pontos || 0));
+
+        const tbody = document.getElementById('playerList');
+        const cards = document.getElementById('rankingCards');
+
+        tbody.innerHTML = jogadores.map((j, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${j.nome || '-'} </td>
+            <td>${j.pontos || 0}</td>
+            <td>${j.vitorias || 0}</td>
+            <td>${j.gols || 0}</td>
+            <td>${j.defesa || j.defesas || 0}</td>
+            <td>${j.empate || j.empates || 0}</td>
+            <td>${j.infracoes || 0}</td>
+          </tr>
+        `).join('');
+
+        cards.innerHTML = jogadores.map((j, i) => `
+          <div class="player-card">
+            <div class="player-rank">#${i + 1}</div>
+            <div class="player-name">${j.nome || '-'}</div>
+            <div class="player-points">${j.pontos || 0} pts</div>
+          </div>
+        `).join('');
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById('playerList').innerHTML = '<tr><td colspan="8">Erro ao carregar classificação.</td></tr>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarClassificacao();
+
+      const btn = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.app-nav');
+
+      if (btn && nav) {
+        btn.addEventListener('click', () => {
+          nav.classList.toggle('active');
+        });
+      }
+    });
+  </script>
+
 </body>
 </html>
