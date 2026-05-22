@@ -1,4 +1,4 @@
-import { apiRequest, showFeedback } from "./globais.js";
+import { apiRequest, showFeedback, calculatePoints } from "./globais.js";
 
 /* ======================================================
    UTIL
@@ -9,25 +9,6 @@ function getPlayerIdFromURL() {
   return params.get("id");
 }
 
-/* ======================================================
-   REGRA DE PONTUAÇÃO (OFICIAL)
-====================================================== */
-
-function calculatePoints({
-  vitorias = 0,
-  gols = 0,
-  empate = 0,
-  defesa = 0,
-  infracoes = 0
-}) {
-  return (
-    Number(vitorias) * 3 +
-    Number(gols) * 2 +
-    Number(empate) +
-    Number(defesa) -
-    Number(infracoes) * 2
-  );
-}
 
 /* ======================================================
    ELEMENTOS
@@ -95,7 +76,7 @@ function renderPlayer(p) {
   nameEl.textContent = p.nome;
 
   // Pontos recalculados (fonte da verdade)
-  const pontosCalculados = calculatePoints(p);
+  const pontosCalculados = calculatePoints(p.vitorias, p.empate, p.defesa, p.gols, p.infracoes);
   pointsEl.textContent = pontosCalculados;
 
   // Estatísticas
