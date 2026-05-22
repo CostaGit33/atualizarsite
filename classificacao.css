@@ -1,5 +1,5 @@
 /* ======================================================
-   RESET / SEGURANÇA
+   RESET / BASE
 ====================================================== */
 
 * {
@@ -9,18 +9,18 @@
 }
 
 img {
-  max-width: 0.1%;
+  max-width: 100%;
   height: auto;
   display: block;
 }
 
 /* ======================================================
-   ÁREA PRINCIPAL CENTRALIZADA
+   LAYOUT PRINCIPAL
 ====================================================== */
 
 .app-main {
   width: 100%;
-  max-width: 1400px; /* aumenta limite */
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem 1rem;
   display: flex;
@@ -58,7 +58,7 @@ img {
 }
 
 /* ======================================================
-   WRAPPER DA TABELA
+   TABLE WRAPPER
 ====================================================== */
 
 .table-wrapper {
@@ -73,13 +73,13 @@ img {
 }
 
 /* ======================================================
-   TABELA BASE
+   TABLE DESKTOP
 ====================================================== */
 
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto; /* IMPORTANTE */
+  table-layout: fixed;
 }
 
 thead {
@@ -92,7 +92,7 @@ thead {
 
 th,
 td {
-  padding: 0.45rem 0.3rem; /* 🔥 estreita colunas */
+  padding: 0.45rem 0.3rem;
   font-size: 0.75rem;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   text-align: center;
@@ -105,42 +105,31 @@ th {
   color: #fff;
 }
 
-/* ======================================================
-   COLUNA POSIÇÃO (#)
-====================================================== */
-
+/* COLUNA POSIÇÃO */
 th:nth-child(1),
 td:nth-child(1) {
   width: 5%;
 }
 
-/* ======================================================
-   COLUNA NOME (PRIORIDADE TOTAL)
-====================================================== */
-
+/* COLUNA NOME */
 th:nth-child(2),
 td:nth-child(2) {
   text-align: left;
   width: 45%;
   padding-left: 0.6rem;
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* ======================================================
-   COLUNAS NUMÉRICAS
-====================================================== */
-
+/* OUTRAS COLUNAS */
 th:nth-child(n+3),
 td:nth-child(n+3) {
   width: auto;
   white-space: nowrap;
 }
 
-/* ======================================================
-   HOVER E LÍDER
-====================================================== */
-
+/* HOVER */
 tbody tr {
   transition: background 0.2s ease;
 }
@@ -149,15 +138,13 @@ tbody tr:hover {
   background: rgba(214, 40, 40, 0.12);
 }
 
+/* LÍDER */
 tbody tr:first-child {
   background: rgba(214, 40, 40, 0.18);
   font-weight: 700;
 }
 
-/* ======================================================
-   LINK NOME
-====================================================== */
-
+/* LINKS */
 .table-wrapper td a {
   color: #fff;
   text-decoration: none;
@@ -170,7 +157,7 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   CARDS
+   CARDS (DESKTOP OUTRO BLOCO)
 ====================================================== */
 
 .cards {
@@ -220,40 +207,77 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   MOBILE AJUSTES
+   MOBILE SOFASCORE MODE
 ====================================================== */
 
 @media (max-width: 480px) {
 
   .app-main {
-    padding: 1.2rem 0.6rem;
+    padding: 1rem 0.6rem;
+    gap: 2rem;
   }
 
-  th,
+  /* esconder cabeçalho */
+  table thead {
+    display: none;
+  }
+
+  /* tabela vira bloco */
+  table,
+  tbody,
+  tr {
+    display: block;
+    width: 100%;
+  }
+
+  /* card da linha */
+  tbody tr {
+    background: rgba(20, 20, 20, 0.85);
+    margin-bottom: 12px;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+  }
+
+  /* células viram linhas internas */
   td {
-    font-size: 0.68rem;
-    padding: 0.3rem 0.2rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.8rem;
+    border: none;
   }
 
-  /* 🔴 Remove EMPATE (6ª coluna real) */
+  /* OCULTAR EMPATE (6) e DEFESA (7) */
+  td:nth-child(6),
+  td:nth-child(7),
   th:nth-child(6),
-  td:nth-child(6) {
-    display: none;
+  th:nth-child(7) {
+    display: none !important;
   }
 
-  /* 🔴 Remove INFRAÇÕES (7ª coluna real) */
-  th:nth-child(7),
-  td:nth-child(7) {
-    display: none;
+  /* posição destaque */
+  td:nth-child(1) {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
   }
 
-  /* Nome ganha mais espaço */
-  th:nth-child(2),
+  /* nome destaque */
   td:nth-child(2) {
-    width: 55%;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* pontos destaque */
+  td:last-child {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--highlight-color);
   }
 
   .brand-logo {
-    width: 130px;
+    width: 90px;
   }
 }
