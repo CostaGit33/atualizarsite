@@ -62,36 +62,6 @@
     .offline-banner strong  { font-weight: 700; }
     .offline-banner p       { margin: 0; opacity: .75; font-size: .75rem; }
 
-    /* ── BANNER INSTALL ──────────────────────── */
-    .install-banner {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: .75rem 1.25rem;
-      border-bottom: 1px solid var(--border-color, #2e2e2e);
-      animation: fadeUp .3s ease;
-      flex-wrap: wrap;
-    }
-    .install-banner.visible { display: flex; }
-    .install-banner-text strong { display: block; font-size: .88rem; font-weight: 700; }
-    .install-banner-text p      { margin: .15rem 0 0; font-size: .72rem; opacity: .5; }
-    .install-banner-actions     { display: flex; align-items: center; gap: .5rem; }
-    .install-btn {
-      padding: .4rem .9rem;
-      border-radius: 6px;
-      border: 1px solid var(--border-color, #2e2e2e);
-      background: transparent;
-      color: inherit;
-      font-size: .8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s;
-    }
-    .install-btn:hover  { background: rgba(255,255,255,.06); }
-    .install-btn.primary { background: var(--accent-color, #4caf50); color: #000; border-color: transparent; }
-    .install-btn.primary:hover { opacity: .85; }
-
     /* ── TABELA: animações e hover ───────────── */
     #playerList tr {
       transition: background .15s;
@@ -271,7 +241,7 @@
   <!-- ================= HEADER ================= -->
   <header class="app-header">
     <div class="brand">
-      <h1 style="margin: 0; font-size: 1.3rem; color: #ffcc00;">FutPontos</h1>
+      <img src="futponts_large.png" class="brand-logo" alt="FutPontos Logo" />
     </div>
     <button class="menu-toggle" aria-label="Abrir menu">☰</button>
     <nav class="app-nav">
@@ -337,6 +307,44 @@
   <script type="module" src="./globais.js"></script>
   <script src="menu.js"></script>
 
+  <!-- ── PWA INSTALL BANNER ── -->
+  <script>
+    const INSTALL_KEY = "fp_install_dismissed";
+    let installPromptEvent = null;
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPromptEvent = event;
+
+      const dismissed = localStorage.getItem(INSTALL_KEY);
+      if (!dismissed) {
+        document.getElementById("install-banner").classList.add("visible");
+      }
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      localStorage.removeItem(INSTALL_KEY);
+    });
+
+    document.getElementById("install-confirm")?.addEventListener("click", async () => {
+      if (!installPromptEvent) return;
+      installPromptEvent.prompt();
+      const result = await installPromptEvent.userChoice;
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      if (result.outcome === "accepted") {
+        console.log("PWA instalado.");
+      }
+    });
+
+    document.getElementById("install-dismiss")?.addEventListener("click", () => {
+      localStorage.setItem(INSTALL_KEY, String(Date.now()));
+      document.getElementById("install-banner").classList.remove("visible");
+    });
+  </script>
+
   <script type="module">
     import { apiRequest, calculatePoints, showFeedback } from "./globais.js";
 
@@ -346,7 +354,6 @@
     const ENDPOINT        = "/jogadores";
     const UPDATE_INTERVAL = 10000;
     const PREV_KEY        = "fp_prev_rank";
-    const INSTALL_KEY     = "fp_install_dismissed";
     const API_MAX_RETRIES = 3;
 
     /* Pesos — ajuste conforme globais.js */
@@ -378,14 +385,13 @@
 
     /* ════════════════════════════════════════════
        API HEALTH CHECK — retry + backoff
-       (padrão extraído do Foguinho Barbearia)
     ════════════════════════════════════════════ */
     let apiOnline = true;
 
     async function checkApiHealth() {
       for (let attempt = 1; attempt <= API_MAX_RETRIES; attempt++) {
         try {
-          await apiRequest("/");  // endpoint raiz da sua API
+          await apiRequest("/");
           setApiStatus(true);
           return true;
         } catch {
@@ -393,7 +399,6 @@
             setApiStatus(false);
             return false;
           }
-          // Exponential backoff: 1s, 2s, 4s
           await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
         }
       }
@@ -554,7 +559,6 @@
         console.error("Erro ao carregar classificação:", err);
         setApiStatus(false);
 
-        // Só substitui o conteúdo se ainda estiver no estado de loading
         const tbody = document.getElementById("playerList");
         if (tbody.querySelector(".fp-loading")) {
           tbody.innerHTML =
@@ -562,44 +566,6 @@
         }
       }
     }
-
-    /* ════════════════════════════════════════════
-       PWA — INSTALL PROMPT
-       (padrão extraído do Foguinho Barbearia)
-    ════════════════════════════════════════════ */
-    let installPromptEvent = null;
-
-    window.addEventListener("beforeinstallprompt", event => {
-      event.preventDefault();
-      installPromptEvent = event;
-
-      const dismissed = localStorage.getItem(INSTALL_KEY);
-      if (!dismissed) {
-        document.getElementById("install-banner").classList.add("visible");
-      }
-    });
-
-    window.addEventListener("appinstalled", () => {
-      installPromptEvent = null;
-      document.getElementById("install-banner").classList.remove("visible");
-      localStorage.removeItem(INSTALL_KEY);
-    });
-
-    document.getElementById("install-confirm").addEventListener("click", async () => {
-      if (!installPromptEvent) return;
-      installPromptEvent.prompt();
-      const result = await installPromptEvent.userChoice;
-      installPromptEvent = null;
-      document.getElementById("install-banner").classList.remove("visible");
-      if (result.outcome === "accepted") {
-        console.log("PWA instalado.");
-      }
-    });
-
-    document.getElementById("install-dismiss").addEventListener("click", () => {
-      localStorage.setItem(INSTALL_KEY, String(Date.now()));
-      document.getElementById("install-banner").classList.remove("visible");
-    });
 
     /* ════════════════════════════════════════════
        SERVICE WORKER

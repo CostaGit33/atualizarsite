@@ -11,9 +11,21 @@
 </head>
 <body>
 
+  <!-- ── BANNER INSTALL PWA ── -->
+  <div class="install-banner" id="install-banner" aria-label="Instalar aplicativo">
+    <div class="install-banner-text">
+      <strong>Instale o FutPontos no seu celular</strong>
+      <p>Acesso rápido, tela cheia, funciona offline.</p>
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-btn primary" id="install-confirm">Instalar</button>
+      <button class="install-btn" id="install-dismiss">Agora não</button>
+    </div>
+  </div>
+
   <header class="app-header">
     <div class="brand">
-      <h1 style="margin: 0; font-size: 1.3rem; color: #ffcc00;">FutPontos</h1>
+      <img src="futponts_large.png" class="brand-logo" alt="FutPontos Logo" />
     </div>
     <button class="menu-toggle" aria-label="Abrir menu">☰</button>
     <nav class="app-nav">
@@ -28,26 +40,28 @@
 
   <main class="app-main">
 
-    <section class="section-header brand">
-      <h2>🏆 Ranking de Goleiros</h2>
-    </section>
-
-    <section class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th> <th>Goleiro</th>
-            <th>P</th>
-            <th>V</th>
-            <th>E</th>
-            <th>G</th>
-            <th>D</th>
-            <th>INF</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-goleiros">
+    <section class="classification-section">
+      <header class="section-header">
+        <h2>🏆 Ranking de Goleiros</h2>
+      </header>
+      <div class="table-wrapper">
+        <table aria-label="Tabela de goleiros">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Goleiro</th>
+              <th>P</th>
+              <th>V</th>
+              <th>E</th>
+              <th>G</th>
+              <th>D</th>
+              <th>INF</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-goleiros">
           </tbody>
-      </table>
+        </table>
+      </div>
     </section>
 
     <section class="cards-section">
@@ -55,14 +69,14 @@
         <h2>🔥 Mural de Goleiros</h2>
       </header>
       <div class="cards" id="cards-goleiros">
-        </div>
+      </div>
     </section>
 
   </main>
 
   <footer class="app-footer">
     <div class="footer-content">
-      <span></span>
+      <span>© 2026 • FutPontos</span>
     </div>
   </footer>
 
@@ -71,5 +85,43 @@
   <script type="module" src="globais.js"></script>
   <script src="menu.js"></script>
   <script type="module" src="goleiros.js"></script>
+
+  <!-- ── PWA INSTALL BANNER ── -->
+  <script>
+    const INSTALL_KEY = "fp_install_dismissed";
+    let installPromptEvent = null;
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPromptEvent = event;
+
+      const dismissed = localStorage.getItem(INSTALL_KEY);
+      if (!dismissed) {
+        document.getElementById("install-banner").classList.add("visible");
+      }
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      localStorage.removeItem(INSTALL_KEY);
+    });
+
+    document.getElementById("install-confirm")?.addEventListener("click", async () => {
+      if (!installPromptEvent) return;
+      installPromptEvent.prompt();
+      const result = await installPromptEvent.userChoice;
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      if (result.outcome === "accepted") {
+        console.log("PWA instalado.");
+      }
+    });
+
+    document.getElementById("install-dismiss")?.addEventListener("click", () => {
+      localStorage.setItem(INSTALL_KEY, String(Date.now()));
+      document.getElementById("install-banner").classList.remove("visible");
+    });
+  </script>
 </body>
 </html>

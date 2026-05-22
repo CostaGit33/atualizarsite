@@ -3,120 +3,136 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Detalhes do Jogador</title>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="common-nav.css" />
   <link rel="stylesheet" href="jogador.css" />
 </head>
-
 <body>
 
-  <!-- ================= HEADER ================= -->
+  <!-- ── BANNER INSTALL PWA ── -->
+  <div class="install-banner" id="install-banner" aria-label="Instalar aplicativo">
+    <div class="install-banner-text">
+      <strong>Instale o FutPontos no seu celular</strong>
+      <p>Acesso rápido, tela cheia, funciona offline.</p>
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-btn primary" id="install-confirm">Instalar</button>
+      <button class="install-btn" id="install-dismiss">Agora não</button>
+    </div>
+  </div>
+
   <header class="app-header">
     <div class="brand">
-      <img
-        src="futponts_large.png"
-        class="brand-logo"
-        alt=""
-        aria-hidden="true"
-      />
+      <img src="futponts_large.png" class="brand-logo" alt="FutPontos Logo" />
     </div>
-
     <button class="menu-toggle" aria-label="Abrir menu">☰</button>
-
     <nav class="app-nav">
       <ul>
-        <li>
-          <a href="index.html">Classificação</a>
-        </li>
+        <li><a href="index.html">Classificação</a></li>
+        <li><a href="goleiros.html">Goleiros</a></li>
+        <li><a href="desempenho.html">Desempenho</a></li>
+        <li><a href="https://media.semdominio.online/index.html" target="_blank">Vídeos</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- ================= MAIN ================= -->
   <main class="player-page">
-
-    <!-- LOADING / ERRO -->
     <div id="playerState" class="player-loading">
       Carregando jogador...
     </div>
 
-    <!-- ================= CARD DO JOGADOR ================= -->
     <section id="playerProfile" class="player-profile" hidden>
-
-      <!-- HEADER -->
       <div class="player-header">
-
-        <!-- FOTO -->
         <div class="photo-wrapper">
-          <img
-            id="playerPhoto"
-            class="player-photo"
-            alt="Foto do jogador"
-          />
+          <img id="playerPhoto" class="player-photo" alt="Foto do jogador" />
         </div>
-
-        <!-- INFO -->
         <div class="player-info">
           <h1 id="playerName" class="player-name"></h1>
           <div class="player-points">
             <span id="playerPoints">0</span> pts
           </div>
         </div>
-
       </div>
 
-      <!-- ================= ESTATÍSTICAS ================= -->
       <div class="stats-grid">
-
         <div class="stat-box">
           <div id="statVitorias" class="stat-value">0</div>
           <div class="stat-label">Vitórias</div>
         </div>
-
         <div class="stat-box">
           <div id="statGols" class="stat-value">0</div>
           <div class="stat-label">Gols</div>
         </div>
-
         <div class="stat-box">
           <div id="statDefesas" class="stat-value">0</div>
           <div class="stat-label">Defesas</div>
         </div>
-
         <div class="stat-box">
           <div id="statEmpates" class="stat-value">0</div>
           <div class="stat-label">Empates</div>
         </div>
-
         <div class="stat-box">
           <div id="statInfracoes" class="stat-value">0</div>
           <div class="stat-label">Infrações</div>
         </div>
-
       </div>
 
-      <!-- ================= AÇÕES ================= -->
       <div class="player-actions">
         <a href="index.html" class="btn-back">
           ⬅ Voltar para classificação
         </a>
-
-        </a>
       </div>
-
     </section>
-
   </main>
 
-  <!-- ================= FEEDBACK ================= -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span>© 2026 • FutPontos</span>
+    </div>
+  </footer>
+
   <div id="feedback" aria-live="polite"></div>
 
-  <!-- ================= JS ================= -->
   <script type="module" src="./globais.js"></script>
+  <script src="menu.js"></script>
   <script type="module" src="./jogador.js"></script>
 
+  <!-- ── PWA INSTALL BANNER ── -->
+  <script>
+    const INSTALL_KEY = "fp_install_dismissed";
+    let installPromptEvent = null;
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPromptEvent = event;
+
+      const dismissed = localStorage.getItem(INSTALL_KEY);
+      if (!dismissed) {
+        document.getElementById("install-banner").classList.add("visible");
+      }
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      localStorage.removeItem(INSTALL_KEY);
+    });
+
+    document.getElementById("install-confirm")?.addEventListener("click", async () => {
+      if (!installPromptEvent) return;
+      installPromptEvent.prompt();
+      const result = await installPromptEvent.userChoice;
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      if (result.outcome === "accepted") {
+        console.log("PWA instalado.");
+      }
+    });
+
+    document.getElementById("install-dismiss")?.addEventListener("click", () => {
+      localStorage.setItem(INSTALL_KEY, String(Date.now()));
+      document.getElementById("install-banner").classList.remove("visible");
+    });
+  </script>
 </body>
 </html>
