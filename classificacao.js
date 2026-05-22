@@ -54,16 +54,16 @@ async function carregarClassificacao() {
 
     // Normaliza dados e calcula pontos
     jogadores.forEach(j => {
-      j.vitorias   = Number(j.vitorias)   || 0;
-      j.empates    = Number(j.empate)     || 0;
-      j.defesas    = Number(j.defesa)     || 0;
-      j.gols       = Number(j.gols)       || 0;
-      j.infracoes  = Number(j.infracoes)  || 0;
+      j.vitorias  = Number(j.vitorias)  || 0;
+      j.empate    = Number(j.empate)    || 0;
+      j.defesa    = Number(j.defesa)    || 0;
+      j.gols      = Number(j.gols)      || 0;
+      j.infracoes = Number(j.infracoes) || 0;
 
       j.pontos = calculatePoints(
         j.vitorias,
-        j.empates,
-        j.defesas,
+        j.empate,
+        j.defesa,
         j.gols,
         j.infracoes
       );
@@ -126,8 +126,8 @@ function renderTable(jogadores, tbody) {
       <td><strong>${j.pontos}</strong></td>
       <td>${j.vitorias}</td>
       <td>${j.gols}</td>
-      <td>${j.defesas}</td>
-      <td>${j.empates}</td>
+      <td>${j.defesa}</td>
+      <td>${j.empate}</td>
       <td>${j.infracoes}</td>
     `;
 
@@ -190,8 +190,8 @@ function renderCards(jogadores, container) {
       <div class="player-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; font-size: 0.8rem; opacity: 0.8;">
         <span>🏆 Vit: ${j.vitorias}</span>
         <span>⚽ Gols: ${j.gols}</span>
-        <span>🧤 Def: ${j.defesas}</span>
-        <span>🤝 Emp: ${j.empates}</span>
+        <span>🧤 Def: ${j.defesa}</span>
+        <span>🤝 Emp: ${j.empate}</span>
       </div>
     `;
 
