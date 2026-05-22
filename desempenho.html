@@ -9,14 +9,28 @@
   <link rel="stylesheet" href="classificacao.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    /* ─────────────────────────────────────────── */
+    /* CONTAINER PRINCIPAL                          */
+    /* ─────────────────────────────────────────── */
+    .desempenho-section {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
     .desempenho-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
+      padding: 0;
+      margin: 0;
+      list-style: none;
     }
+
+    /* ─────────────────────────────────────────── */
+    /* CARDS                                         */
+    /* ─────────────────────────────────────────── */
     .player-card {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -25,12 +39,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       transition: transform 0.3s ease;
+      overflow: hidden;
+      word-break: break-word;
     }
+
     .player-card:hover {
       transform: translateY(-5px);
       border-color: #00ff88;
     }
+
+    .player-card h3 {
+      font-size: 1rem;
+      margin: 10px 0;
+      color: #00ff88;
+      text-align: center;
+      max-width: 100%;
+      overflow-wrap: break-word;
+    }
+
     .media-badge {
       background: rgba(0, 255, 136, 0.2);
       color: #00ff88;
@@ -38,53 +66,100 @@
       border-radius: 10px;
       font-weight: bold;
       margin-bottom: 10px;
-    }
-    canvas {
-      max-width: 100%;
-      width: 250px;
-      height: 250px;
-      margin: 15px 0;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
 
     /* ─────────────────────────────────────────── */
-    /* RESPONSIVIDADE MOBILE                        */
+    /* CANVAS CONTAINER                             */
+    /* ─────────────────────────────────────────── */
+    .canvas-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin: 15px 0;
+      max-width: 250px;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ─────────────────────────────────────────── */
+    /* RESPONSIVIDADE TABLET (768px)                */
     /* ─────────────────────────────────────────── */
     @media (max-width: 768px) {
+      .desempenho-section {
+        padding: 1.5rem 1rem;
+      }
+
       .desempenho-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 15px;
-        padding: 15px;
       }
+
       .player-card {
         padding: 15px;
       }
-      canvas {
-        width: 200px;
-        height: 200px;
+
+      .player-card h3 {
+        font-size: 0.95rem;
+      }
+
+      .canvas-wrapper {
+        max-width: 200px;
       }
     }
 
+    /* ─────────────────────────────────────────── */
+    /* RESPONSIVIDADE MOBILE (480px)                */
+    /* ─────────────────────────────────────────── */
     @media (max-width: 480px) {
+      .desempenho-section {
+        padding: 1rem 0.75rem;
+      }
+
       .desempenho-grid {
         grid-template-columns: 1fr;
         gap: 12px;
-        padding: 12px;
       }
+
       .player-card {
         padding: 12px;
       }
-      canvas {
-        width: 150px;
-        height: 150px;
+
+      .player-card h3 {
+        font-size: 0.9rem;
       }
+
       .media-badge {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         padding: 4px 8px;
+      }
+
+      .canvas-wrapper {
+        max-width: 150px;
       }
     }
   </style>
 </head>
 <body>
+
+  <!-- ── BANNER INSTALL PWA ── -->
+  <div class="install-banner" id="install-banner" aria-label="Instalar aplicativo">
+    <div class="install-banner-text">
+      <strong>Instale o FutPontos no seu celular</strong>
+      <p>Acesso rápido, tela cheia, funciona offline.</p>
+    </div>
+    <div class="install-banner-actions">
+      <button class="install-btn primary" id="install-confirm">Instalar</button>
+      <button class="install-btn" id="install-dismiss">Agora não</button>
+    </div>
+  </div>
 
   <header class="app-header">
     <div class="brand">
@@ -102,19 +177,21 @@
   </header>
 
   <main class="app-main">
-    <section class="section-header brand">
-      <h2>📊 Desempenho Técnico dos Jogadores</h2>
-      <p style="text-align: center; opacity: 0.7; margin-top: 10px;">Análise detalhada de habilidades individuais</p>
-    </section>
+    <section class="desempenho-section">
+      <header class="section-header">
+        <h2>📊 Desempenho Técnico dos Jogadores</h2>
+        <p style="text-align: center; opacity: 0.7; margin-top: 10px;">Análise detalhada de habilidades individuais</p>
+      </header>
 
-    <div id="desempenhoContainer" class="desempenho-grid">
-      <!-- Cards serão inseridos via JS -->
-    </div>
+      <div id="desempenhoContainer" class="desempenho-grid">
+        <!-- Cards serão inseridos via JS -->
+      </div>
+    </section>
   </main>
 
   <footer class="app-footer">
     <div class="footer-content">
-      <span></span>
+      <span>© 2026 • FutPontos</span>
     </div>
   </footer>
 
@@ -123,5 +200,43 @@
   <script type="module" src="globais.js"></script>
   <script src="menu.js"></script>
   <script type="module" src="desempenho.js"></script>
+
+  <!-- ── PWA INSTALL BANNER ── -->
+  <script>
+    const INSTALL_KEY = "fp_install_dismissed";
+    let installPromptEvent = null;
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installPromptEvent = event;
+
+      const dismissed = localStorage.getItem(INSTALL_KEY);
+      if (!dismissed) {
+        document.getElementById("install-banner").classList.add("visible");
+      }
+    });
+
+    window.addEventListener("appinstalled", () => {
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      localStorage.removeItem(INSTALL_KEY);
+    });
+
+    document.getElementById("install-confirm")?.addEventListener("click", async () => {
+      if (!installPromptEvent) return;
+      installPromptEvent.prompt();
+      const result = await installPromptEvent.userChoice;
+      installPromptEvent = null;
+      document.getElementById("install-banner").classList.remove("visible");
+      if (result.outcome === "accepted") {
+        console.log("PWA instalado.");
+      }
+    });
+
+    document.getElementById("install-dismiss")?.addEventListener("click", () => {
+      localStorage.setItem(INSTALL_KEY, String(Date.now()));
+      document.getElementById("install-banner").classList.remove("visible");
+    });
+  </script>
 </body>
 </html>
