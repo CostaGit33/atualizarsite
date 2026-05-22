@@ -1,6 +1,8 @@
 import { desempenhoJogadores } from "./desempenho_data.js";
 
 const radarOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
   scales: {
     r: { 
       min: 0, 
@@ -45,28 +47,34 @@ function renderDesempenho() {
 
     const canvasId = `chart_desempenho_${index}`;
 
-    card.innerHTML = `
+    const cardHTML = `
       <div class="media-badge">Média: ${j.media.toFixed(1)}</div>
-      <h3 style="color: #00ff88; margin: 10px 0;">${j.nome}</h3>
-      <canvas id="${canvasId}"></canvas>
+      <h3>${j.nome}</h3>
+      <div class="canvas-wrapper">
+        <canvas id="${canvasId}"></canvas>
+      </div>
     `;
 
+    card.innerHTML = cardHTML;
     container.appendChild(card);
 
-    const ctx = document.getElementById(canvasId).getContext('2d');
-    new Chart(ctx, {
-      type: 'radar',
-      data: {
-        labels: ['Defesa', 'Ataque', 'Habilidade', 'Velocidade', 'Passe'],
-        datasets: [{
-          data: j.stats,
-          borderColor: '#00ff88',
-          backgroundColor: 'rgba(0, 255, 136, 0.2)',
-          borderWidth: 2,
-          pointBackgroundColor: '#00ff88'
-        }]
-      },
-      options: radarOptions
-    });
+    // Cria o canvas dentro do wrapper
+    const ctx = document.getElementById(canvasId);
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Defesa', 'Ataque', 'Habilidade', 'Velocidade', 'Passe'],
+          datasets: [{
+            data: j.stats,
+            borderColor: '#00ff88',
+            backgroundColor: 'rgba(0, 255, 136, 0.2)',
+            borderWidth: 2,
+            pointBackgroundColor: '#00ff88'
+          }]
+        },
+        options: radarOptions
+      });
+    }
   });
 }
