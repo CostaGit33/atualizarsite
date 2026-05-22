@@ -105,7 +105,7 @@ function renderTabela(lista, tbody) {
     <tr>
       <td>${String(i + 1).padStart(2, "0")}</td>
       <td>
-        <a href="jogador.html?id=${g.id}" class="player-link">
+        <a href="goleiro.html?id=${g.id}" class="player-link">
           ${g.nome}
         </a>
       </td>
