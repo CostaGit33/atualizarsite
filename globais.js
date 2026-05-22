@@ -49,15 +49,15 @@ export async function apiRequest(endpoint, options = {}) {
 ====================================================== */
 
 /**
- * Regra oficial de pontuação do FutPontos baseada na sua tabela SQL
- * SQL: vitorias, empate, defesa, gols, infracoes
+ * Regra oficial de pontuação FutPontos
+ * Vitória: +3 | Gol: +2 | Empate: +1 | Defesa: +1 | Infração: -2
  */
-export function calculatePoints(vitorias = 0, empates = 0, defesas = 0, gols = 0, infracoes = 0) {
+export function calculatePoints(vitorias = 0, empate = 0, defesa = 0, gols = 0, infracoes = 0) {
   return (
     Number(vitorias) * 3 +
-    Number(empates) +
-    Number(defesas) +
-    Number(gols) * 2 -
+    Number(empate)   * 1 +
+    Number(defesa)   * 1 +
+    Number(gols)     * 2 -
     Number(infracoes) * 2
   );
 }
