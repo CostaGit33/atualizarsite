@@ -271,22 +271,19 @@
   <!-- ================= HEADER ================= -->
   <header class="app-header">
     <div class="brand">
-      <img src="futponts_large.png" alt="" aria-hidden="true" class="brand-logo" />
+      <h1 style="margin: 0; font-size: 1.3rem; color: #ffcc00;">FutPontos</h1>
     </div>
     <button class="menu-toggle" aria-label="Abrir menu">☰</button>
     <nav class="app-nav">
       <ul>
-        <li><a href="index.html">Classificação</a></li>
-        <li><a href="goleiros.html" class="active">Goleiros</a></li>
+        <li><a href="index.html" class="active">Classificação</a></li>
+        <li><a href="goleiros.html">Goleiros</a></li>
         <li><a href="desempenho.html">Desempenho</a></li>
         <li><a href="https://media.semdominio.online/index.html" target="_blank">Vídeos</a></li>
       </ul>
     </nav>
   </header>
 
-
-
-  
   <!-- ================= MAIN ================= -->
   <main class="app-main">
 
@@ -295,7 +292,6 @@
         <h2>Classificação Geral Individual</h2>
       </header>
       <div class="table-wrapper">
-        <img src="futponts_large.png" alt="" aria-hidden="true" class="table-watermark" />
         <table aria-label="Tabela de classificação geral">
           <thead>
             <tr>
@@ -331,7 +327,6 @@
 
   <footer class="app-footer">
     <div class="footer-content">
-      <img src="futponts_large.png" alt="" aria-hidden="true" class="footer-logo" />
       <span>© 2026 • FutPontos</span>
     </div>
   </footer>
@@ -340,6 +335,7 @@
 
   <!-- globais.js carregado primeiro para estar disponível ao módulo abaixo -->
   <script type="module" src="./globais.js"></script>
+  <script src="menu.js"></script>
 
   <script type="module">
     import { apiRequest, calculatePoints, showFeedback } from "./globais.js";
