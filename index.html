@@ -3,20 +3,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Classificação • FutPontos</title>
-  <meta name="description" content="Classificação geral individual e ranking visual FutPontos." />
 
-  <!-- PWA -->
+  <title>FutPontos • Classificação Geral de Futebol Society</title>
+
+  <meta name="description" content="Ranking visual, classificação geral, estatísticas e desempenho dos jogadores no FutPontos." />
+  <meta name="keywords" content="futebol society, ranking futebol, classificação futebol, futpontos, jogadores, desempenho" />
+  <meta name="author" content="FutPontos" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://semdominio.online/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FutPontos • Classificação Geral" />
+  <meta property="og:description" content="Veja ranking, estatísticas e desempenho dos jogadores." />
+  <meta property="og:url" content="https://semdominio.online/" />
+  <meta property="og:image" content="https://semdominio.online/futponts_large.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FutPontos" />
+  <meta name="twitter:description" content="Classificação geral e ranking visual FutPontos." />
+  <meta name="twitter:image" content="https://semdominio.online/futponts_large.png" />
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#07080D" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="FutPontos" />
+
+  <link rel="icon" href="futponts_large.png" type="image/png" />
   <link rel="apple-touch-icon" href="futponts_large.png" />
 
-  <!-- Google Analytics (GA4) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VVYJFM295R"></script>
+
+  <link rel="stylesheet" href="common-nav.css" />
+  <link rel="stylesheet" href="classificacao.css" />
+
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .brand-logo {
+      filter: drop-shadow(0 0 10px rgba(255,255,255,.08));
+    }
+
+    .player-card {
+      backdrop-filter: blur(8px);
+      border-radius: 18px;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .app-main {
+      width: min(1400px, 95%);
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <noscript>Seu navegador precisa ter JavaScript habilitado para utilizar o FutPontos.</noscript>
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="futponts_large.png" class="brand-logo" alt="Logo FutPontos" loading="lazy" />
+    </div>
+
+    <button class="menu-toggle" aria-label="Abrir menu">☰</button>
+
+    <nav class="app-nav" aria-label="Navegação principal">
+      <ul>
+        <li><a href="index.html" class="active">Classificação</a></li>
+        <li><a href="goleiros.html">Goleiros</a></li>
+        <li><a href="desempenho.html">Desempenho</a></li>
+        <li><a href="https://media.semdominio.online/index.html" target="_blank" rel="noopener noreferrer">Vídeos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <section class="classification-section">
+      <header class="section-header">
+        <h1>Classificação Geral Individual</h1>
+      </header>
+
+      <div class="table-wrapper">
+        <table aria-label="Tabela de classificação geral dos jogadores">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Jogador</th>
+              <th>Pontos</th>
+              <th>Vitórias</th>
+              <th>Gols</th>
+              <th>Defesas</th>
+              <th>Empates</th>
+              <th>Infrações</th>
+            </tr>
+          </thead>
+
+          <tbody id="playerList">
+            <tr>
+              <td colspan="8">Carregando classificação...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="cards-section">
+      <header class="section-header">
+        <h2>Ranking Visual</h2>
+      </header>
+
+      <div id="rankingCards" class="cards" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span>© 2026 • FutPontos • semdominio.online</span>
+    </div>
+  </footer>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -28,564 +154,7 @@
     });
   </script>
 
-  <link rel="stylesheet" href="common-nav.css" />
-  <link rel="stylesheet" href="classificacao.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
-    /* ── ANIMAÇÕES ───────────────────────────── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes progressFill {
-      from { width: 0; }
-    }
-    @keyframes blink {
-      0%, 80%, 100% { opacity: .15; }
-      40%           { opacity: 1; }
-    }
-
-    /* ── BANNER OFFLINE ──────────────────────── */
-    .offline-banner {
-      display: none;
-      align-items: center;
-      gap: .75rem;
-      padding: .65rem 1.25rem;
-      background: rgba(232, 68, 90, .08);
-      border-bottom: 1px solid rgba(232, 68, 90, .25);
-      font-size: .82rem;
-      color: #e8445a;
-      animation: fadeUp .3s ease;
-    }
-    .offline-banner.visible { display: flex; }
-    .offline-banner strong  { font-weight: 700; }
-    .offline-banner p       { margin: 0; opacity: .75; font-size: .75rem; }
-
-    /* ── TABELA: animações e hover ───────────── */
-    #playerList tr {
-      transition: background .15s;
-      animation: fadeUp .3s ease both;
-    }
-    #playerList tr:hover { background: rgba(255,255,255,.03); }
-
-    /* Tendência */
-    .trend {
-      font-size: .65rem;
-      font-weight: 700;
-      margin-left: .2rem;
-      vertical-align: middle;
-    }
-    .trend-up   { color: #27c97e; }
-    .trend-down { color: #e8445a; }
-
-    /* Link no nome */
-    .player-link {
-      color: inherit;
-      text-decoration: none;
-      transition: opacity .15s;
-    }
-    .player-link:hover { opacity: .65; }
-
-    /* Barra de progresso embaixo dos pontos */
-    .pts-cell { white-space: nowrap; }
-    .pts-bar {
-      display: block;
-      height: 2px;
-      border-radius: 1px;
-      background: rgba(255,255,255,.08);
-      margin-top: 3px;
-      overflow: hidden;
-    }
-    .pts-bar-fill {
-      display: block;
-      height: 100%;
-      border-radius: 1px;
-      background: var(--accent-color, #4caf50);
-      animation: progressFill .7s cubic-bezier(.34,1.56,.64,1) both;
-    }
-
-    /* Tooltip de breakdown nos pontos */
-    .pts-wrap {
-      position: relative;
-      display: inline-block;
-      cursor: default;
-    }
-    .pts-tip {
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      transform: translateX(-50%) translateY(4px);
-      background: var(--surface-color, #1c1c1c);
-      border: 1px solid var(--border-color, #2e2e2e);
-      border-radius: 8px;
-      padding: .55rem .75rem;
-      min-width: 160px;
-      font-size: .72rem;
-      line-height: 1.6;
-      z-index: 30;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .18s, transform .18s;
-      text-align: left;
-      white-space: nowrap;
-    }
-    .pts-tip::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: var(--border-color, #2e2e2e);
-    }
-    .pts-wrap:hover .pts-tip {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-    .bd-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      opacity: .65;
-    }
-    .bd-row span:last-child { opacity: 1; font-weight: 600; }
-    .bd-sep {
-      border: none;
-      border-top: 1px solid var(--border-color, #2e2e2e);
-      margin: .3rem 0;
-    }
-    .bd-total {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      font-weight: 700;
-    }
-
-    /* Infrações vermelhas */
-    .inf-warn { color: #e8445a; }
-
-    /* ── CARDS ───────────────────────────────── */
-    #rankingCards .player-card {
-      animation: fadeUp .4s ease both;
-      transition: transform .2s;
-    }
-    #rankingCards .player-card:hover { transform: translateY(-3px); }
-
-    .card-progress { margin: .6rem 0 .4rem; }
-    .card-progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: .65rem;
-      opacity: .45;
-      margin-bottom: .3rem;
-    }
-    .pts-diff {
-      font-size: .72rem;
-      opacity: .45;
-      margin-left: .3rem;
-    }
-
-    /* ── SPINNER ─────────────────────────────── */
-    .fp-loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .5rem;
-      padding: 2.5rem 1rem;
-      opacity: .4;
-      font-size: .8rem;
-      letter-spacing: .1em;
-    }
-    .fp-loading i { display: inline-flex; gap: 4px; font-style: normal; }
-    .fp-loading i span {
-      display: inline-block;
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      animation: blink .9s ease infinite alternate;
-    }
-    .fp-loading i span:nth-child(2) { animation-delay: .2s; }
-    .fp-loading i span:nth-child(3) { animation-delay: .4s; }
-
-    .fp-error {
-      padding: 2rem;
-      text-align: center;
-      opacity: .45;
-      font-size: .85rem;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ── BANNER OFFLINE ── -->
-  <div class="offline-banner" id="offline-banner" role="alert" aria-live="polite">
-    <div>
-      <strong>Sem conexão com a API.</strong>
-      <p>Exibindo os últimos dados carregados. Tentando reconectar...</p>
-    </div>
-  </div>
-
-  <!-- ── BANNER INSTALL PWA ── -->
-  <div class="install-banner" id="install-banner" aria-label="Instalar aplicativo">
-    <div class="install-banner-text">
-      <strong>Instale o FutPontos no seu celular</strong>
-      <p>Acesso rápido, tela cheia, funciona offline.</p>
-    </div>
-    <div class="install-banner-actions">
-      <button class="install-btn primary" id="install-confirm">Instalar</button>
-      <button class="install-btn" id="install-dismiss">Agora não</button>
-    </div>
-  </div>
-
-  <!-- ================= HEADER ================= -->
-  <header class="app-header">
-    <div class="brand">
-      <img src="futponts_large.png" class="brand-logo" alt="FutPontos Logo" />
-    </div>
-    <button class="menu-toggle" aria-label="Abrir menu">☰</button>
-    <nav class="app-nav">
-      <ul>
-        <li><a href="index.html" class="active">Classificação</a></li>
-        <li><a href="goleiros.html">Goleiros</a></li>
-        <li><a href="desempenho.html">Desempenho</a></li>
-        <li><a href="https://media.semdominio.online/index.html" target="_blank">Vídeos</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- ================= MAIN ================= -->
-  <main class="app-main">
-
-    <section class="classification-section">
-      <header class="section-header">
-        <h2>Classificação Geral Individual</h2>
-      </header>
-      <div class="table-wrapper">
-        <table aria-label="Tabela de classificação geral">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jog</th>
-              <th>P</th>
-              <th>V</th>
-              <th>G</th>
-              <th>D</th>
-              <th>E</th>
-              <th>INF</th>
-            </tr>
-          </thead>
-          <tbody id="playerList">
-            <tr>
-              <td colspan="8">
-                <div class="fp-loading"><i><span></span><span></span><span></span></i> Carregando...</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="cards-section">
-      <header class="section-header">
-        <h2>Ranking Visual</h2>
-      </header>
-      <div id="rankingCards" class="cards" aria-live="polite"></div>
-    </section>
-
-  </main>
-
-  <footer class="app-footer">
-    <div class="footer-content">
-      <span>© 2026 • FutPontos</span>
-    </div>
-  </footer>
-
-  <div id="feedback" aria-live="polite"></div>
-
-  <!-- globais.js carregado primeiro para estar disponível ao módulo abaixo -->
   <script type="module" src="./globais.js"></script>
-  <script src="menu.js"></script>
-
-  <!-- ── PWA INSTALL BANNER ── -->
-  <script>
-    const INSTALL_KEY = "fp_install_dismissed";
-    let installPromptEvent = null;
-
-    window.addEventListener("beforeinstallprompt", event => {
-      event.preventDefault();
-      installPromptEvent = event;
-
-      const dismissed = localStorage.getItem(INSTALL_KEY);
-      if (!dismissed) {
-        document.getElementById("install-banner").classList.add("visible");
-      }
-    });
-
-    window.addEventListener("appinstalled", () => {
-      installPromptEvent = null;
-      document.getElementById("install-banner").classList.remove("visible");
-      localStorage.removeItem(INSTALL_KEY);
-    });
-
-    document.getElementById("install-confirm")?.addEventListener("click", async () => {
-      if (!installPromptEvent) return;
-      installPromptEvent.prompt();
-      const result = await installPromptEvent.userChoice;
-      installPromptEvent = null;
-      document.getElementById("install-banner").classList.remove("visible");
-      if (result.outcome === "accepted") {
-        console.log("PWA instalado.");
-      }
-    });
-
-    document.getElementById("install-dismiss")?.addEventListener("click", () => {
-      localStorage.setItem(INSTALL_KEY, String(Date.now()));
-      document.getElementById("install-banner").classList.remove("visible");
-    });
-  </script>
-
-  <script type="module">
-    import { apiRequest, calculatePoints, showFeedback } from "./globais.js";
-
-    /* ════════════════════════════════════════════
-       CONFIG
-    ════════════════════════════════════════════ */
-    const ENDPOINT        = "/jogadores";
-    const UPDATE_INTERVAL = 10000;
-    const PREV_KEY        = "fp_prev_rank";
-    const API_MAX_RETRIES = 3;
-
-    /* Pesos — ajuste conforme globais.js */
-    const W = { vitorias: 3, empates: 1, gols: 1, defesas: 1, infracoes: -2 };
-
-    function pontuacao(j) {
-      if (typeof calculatePoints === "function") {
-        return calculatePoints(j.vitorias, j.empates, j.defesas, j.gols, j.infracoes);
-      }
-      return j.vitorias  * W.vitorias
-           + j.empates   * W.empates
-           + j.gols      * W.gols
-           + j.defesas   * W.defesas
-           + j.infracoes * W.infracoes;
-    }
-
-    /* ════════════════════════════════════════════
-       NORMALIZA CAMPOS DA API
-       (API retorna "empate"/"defesa" sem plural)
-    ════════════════════════════════════════════ */
-    function normaliza(j) {
-      j.vitorias  = Number(j.vitorias)  || 0;
-      j.empates   = Number(j.empate)    || 0;
-      j.defesas   = Number(j.defesa)    || 0;
-      j.gols      = Number(j.gols)      || 0;
-      j.infracoes = Number(j.infracoes) || 0;
-      j.pontos    = Number(j.pontos)    || pontuacao(j);
-    }
-
-    /* ════════════════════════════════════════════
-       API HEALTH CHECK — retry + backoff
-    ════════════════════════════════════════════ */
-    let apiOnline = true;
-
-    async function checkApiHealth() {
-      for (let attempt = 1; attempt <= API_MAX_RETRIES; attempt++) {
-        try {
-          await apiRequest("/");
-          setApiStatus(true);
-          return true;
-        } catch {
-          if (attempt === API_MAX_RETRIES) {
-            setApiStatus(false);
-            return false;
-          }
-          await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
-        }
-      }
-    }
-
-    function setApiStatus(online) {
-      apiOnline = online;
-      const banner = document.getElementById("offline-banner");
-      banner.classList.toggle("visible", !online);
-    }
-
-    /* ════════════════════════════════════════════
-       TENDÊNCIA (localStorage entre refreshes)
-    ════════════════════════════════════════════ */
-    function salvarPrev(players) {
-      try {
-        const snap = {};
-        players.forEach((p, i) => snap[p.id] = i + 1);
-        localStorage.setItem(PREV_KEY, JSON.stringify(snap));
-      } catch {}
-    }
-
-    function tendencia(id, rank) {
-      try {
-        const prev = JSON.parse(localStorage.getItem(PREV_KEY) || "{}");
-        const p = prev[id];
-        if (p === undefined) return "";
-        if (p > rank) return `<span class="trend trend-up" title="Subiu ${p - rank}">▲</span>`;
-        if (p < rank) return `<span class="trend trend-down" title="Caiu ${rank - p}">▼</span>`;
-        return "";
-      } catch { return ""; }
-    }
-
-    /* ════════════════════════════════════════════
-       BREAKDOWN TOOLTIP
-    ════════════════════════════════════════════ */
-    function breakdown(j) {
-      const linhas = [
-        { label: "Vitórias",  val: j.vitorias,  mult: W.vitorias  },
-        { label: "Empates",   val: j.empates,   mult: W.empates   },
-        { label: "Gols",      val: j.gols,      mult: W.gols      },
-        { label: "Defesas",   val: j.defesas,   mult: W.defesas   },
-        { label: "Infrações", val: j.infracoes, mult: W.infracoes },
-      ].filter(r => r.val > 0 || r.mult < 0);
-
-      return `<div class="pts-wrap">
-        ${j.pontos}
-        <div class="pts-tip">
-          ${linhas.map(r => {
-            const pts = r.val * r.mult;
-            return `<div class="bd-row">
-              <span>${r.label} ×${r.val}</span>
-              <span>${pts >= 0 ? "+" : ""}${pts}</span>
-            </div>`;
-          }).join("")}
-          <hr class="bd-sep">
-          <div class="bd-total"><span>Total</span><span>${j.pontos}</span></div>
-        </div>
-      </div>`;
-    }
-
-    /* ════════════════════════════════════════════
-       RENDER TABELA
-    ════════════════════════════════════════════ */
-    function renderTabela(players) {
-      const tbody  = document.getElementById("playerList");
-      const maxPts = players[0]?.pontos || 1;
-
-      if (!players.length) {
-        tbody.innerHTML = '<tr><td colspan="8"><p class="fp-error">Nenhum jogador cadastrado.</p></td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = players.map((j, i) => {
-        const rank  = i + 1;
-        const pct   = Math.round((j.pontos / maxPts) * 100);
-        const delay = `${Math.min(i, 12) * 0.04}s`;
-
-        return `<tr style="animation-delay:${delay}">
-          <td>${rank}${tendencia(j.id, rank)}</td>
-          <td><a href="jogador.html?id=${j.id}" class="player-link">${j.nome}</a></td>
-          <td class="pts-cell">
-            ${breakdown(j)}
-            <span class="pts-bar">
-              <span class="pts-bar-fill" style="width:${pct}%; animation-delay:${delay}"></span>
-            </span>
-          </td>
-          <td>${j.vitorias}</td>
-          <td>${j.gols}</td>
-          <td>${j.defesas}</td>
-          <td>${j.empates}</td>
-          <td class="${j.infracoes > 0 ? "inf-warn" : ""}">${j.infracoes}</td>
-        </tr>`;
-      }).join("");
-    }
-
-    /* ════════════════════════════════════════════
-       RENDER CARDS
-    ════════════════════════════════════════════ */
-    function renderCards(players) {
-      const container = document.getElementById("rankingCards");
-      const maxPts    = players[0]?.pontos || 1;
-
-      if (!players.length) {
-        container.innerHTML = '<p class="fp-error">Nenhum jogador cadastrado.</p>';
-        return;
-      }
-
-      container.innerHTML = players.map((j, i) => {
-        const rank        = i + 1;
-        const pct         = Math.round((j.pontos / maxPts) * 100);
-        const ptsToLeader = i === 0 ? 0 : players[0].pontos - j.pontos;
-        const delay       = `${Math.min(i, 10) * 0.05}s`;
-
-        return `<div class="player-card" style="animation-delay:${delay}">
-          <div class="player-rank">#${rank}</div>
-          <div class="player-name">
-            <a href="jogador.html?id=${j.id}" class="player-link">${j.nome}</a>
-            ${tendencia(j.id, rank)}
-          </div>
-          <div class="player-points">
-            ${j.pontos} pts
-            ${ptsToLeader > 0 ? `<span class="pts-diff">−${ptsToLeader} do líder</span>` : ""}
-          </div>
-          <div class="card-progress">
-            <div class="card-progress-label"><span>vs. líder</span><span>${pct}%</span></div>
-            <span class="pts-bar">
-              <span class="pts-bar-fill" style="width:${pct}%; animation-delay:${delay}"></span>
-            </span>
-          </div>
-          <div class="player-stats">
-            <span>V ${j.vitorias}</span>
-            <span>G ${j.gols}</span>
-            <span>D ${j.defesas}</span>
-            <span>E ${j.empates}</span>
-          </div>
-        </div>`;
-      }).join("");
-    }
-
-    /* ════════════════════════════════════════════
-       LOAD PRINCIPAL
-    ════════════════════════════════════════════ */
-    async function carregarClassificacao() {
-      try {
-        const jogadores = await apiRequest(ENDPOINT);
-        if (!Array.isArray(jogadores)) throw new Error("Resposta inválida da API");
-
-        jogadores.forEach(normaliza);
-        jogadores.sort((a, b) => b.pontos - a.pontos);
-
-        renderTabela(jogadores);
-        renderCards(jogadores);
-        salvarPrev(jogadores);
-        setApiStatus(true);
-
-      } catch (err) {
-        console.error("Erro ao carregar classificação:", err);
-        setApiStatus(false);
-
-        const tbody = document.getElementById("playerList");
-        if (tbody.querySelector(".fp-loading")) {
-          tbody.innerHTML =
-            '<tr><td colspan="8"><p class="fp-error">Erro ao carregar dados.</p></td></tr>';
-        }
-      }
-    }
-
-    /* ════════════════════════════════════════════
-       SERVICE WORKER
-    ════════════════════════════════════════════ */
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then(() => console.log("Service Worker registrado."))
-        .catch(err => console.warn("SW não registrado:", err));
-    }
-
-    /* ════════════════════════════════════════════
-       INIT
-    ════════════════════════════════════════════ */
-    document.addEventListener("DOMContentLoaded", () => {
-      checkApiHealth();
-      carregarClassificacao();
-      setInterval(carregarClassificacao, UPDATE_INTERVAL);
-    });
-  </script>
-
+  <script defer src="menu.js"></script>
 </body>
 </html>
