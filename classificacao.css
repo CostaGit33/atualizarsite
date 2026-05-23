@@ -36,6 +36,7 @@ img {
   text-align: center;
 }
 
+.section-header h1,
 .section-header h2 {
   font-size: 1.8rem;
   color: var(--highlight-color);
@@ -207,14 +208,66 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   MOBILE SOFASCORE MODE
+   TABLET RESPONSIVIDADE (768px)
+====================================================== */
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 1.5rem 1rem;
+    gap: 2rem;
+  }
+
+  .section-header h1,
+  .section-header h2 {
+    font-size: 1.4rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  th {
+    font-size: 0.7rem;
+  }
+
+  .player-card {
+    padding: 1.2rem;
+  }
+
+  .player-name {
+    font-size: 1rem;
+  }
+
+  .player-points {
+    font-size: 1.4rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* ======================================================
+   MOBILE SOFASCORE MODE (480px)
 ====================================================== */
 
 @media (max-width: 480px) {
 
   .app-main {
-    padding: 1rem 0.6rem;
-    gap: 2rem;
+    padding: 0.8rem 0.6rem;
+    gap: 1.5rem;
+  }
+
+  .section-header h1,
+  .section-header h2 {
+    font-size: 1.1rem;
   }
 
   /* esconder cabeçalho */
@@ -243,8 +296,8 @@ tbody tr:first-child {
   td {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
-    font-size: 0.8rem;
+    padding: 6px 0;
+    font-size: 0.85rem;
     border: none;
   }
 
@@ -265,19 +318,71 @@ tbody tr:first-child {
 
   /* nome destaque */
   td:nth-child(2) {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 800;
     color: #fff;
   }
 
   /* pontos destaque */
   td:last-child {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 900;
     color: var(--highlight-color);
   }
 
   .brand-logo {
     width: 90px;
+  }
+
+  .player-card {
+    padding: 1rem;
+  }
+
+  .player-name {
+    font-size: 0.95rem;
+  }
+
+  .player-points {
+    font-size: 1.2rem;
+  }
+
+  .player-rank {
+    font-size: 1.1rem;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+}
+
+/* ======================================================
+   VERY SMALL MOBILE (360px)
+====================================================== */
+
+@media (max-width: 360px) {
+  .app-main {
+    padding: 0.6rem 0.4rem;
+  }
+
+  .section-header h1,
+  .section-header h2 {
+    font-size: 1rem;
+  }
+
+  td {
+    font-size: 0.8rem;
+  }
+
+  td:nth-child(1) {
+    font-size: 0.9rem;
+  }
+
+  td:nth-child(2) {
+    font-size: 0.85rem;
+  }
+
+  td:last-child {
+    font-size: 1rem;
   }
 }

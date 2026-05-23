@@ -54,6 +54,7 @@ body {
   cursor: pointer;
   padding: 0.5rem;
   z-index: 1001;
+  touch-action: manipulation;
 }
 
 .menu-toggle:active {
@@ -218,8 +219,12 @@ body {
   font-size: 0.8rem;
 }
 
-/* ── RESPONSIVE MOBILE (768px) ──────────────── */
+/* ── RESPONSIVE TABLET (768px) ──────────────── */
 @media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
   .app-header {
     padding: 1rem;
     flex-wrap: wrap;
@@ -265,6 +270,7 @@ body {
     display: block;
     padding: 0.5rem 1rem;
     text-align: center;
+    font-size: 0.95rem;
   }
 
   .install-banner {
@@ -287,6 +293,10 @@ body {
 
 /* ── RESPONSIVE MOBILE (480px) ──────────────── */
 @media (max-width: 480px) {
+  html {
+    font-size: 12px;
+  }
+
   .app-header {
     padding: 0.75rem;
   }
@@ -302,6 +312,10 @@ body {
 
   .app-nav {
     top: 100%;
+  }
+
+  .app-nav a {
+    font-size: 0.9rem;
   }
 
   .install-banner {

@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
   if (menuToggle && appNav) {
     // Toggle menu ao clicar no botão
-    menuToggle.addEventListener("click", () => {
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
       appNav.classList.toggle("active");
     });
 
