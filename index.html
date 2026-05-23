@@ -155,73 +155,10 @@
       white-space: nowrap;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(220px, 1fr)
-      );
-      gap: 18px;
-      margin-top: 20px;
-    }
-
-    .player-card {
-      position: relative;
-      padding: 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      backdrop-filter: blur(8px);
-      transition: transform .2s ease;
-    }
-
-    .player-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .player-rank {
-      font-size: 0.9rem;
-      opacity: 0.7;
-      margin-bottom: 10px;
-    }
-
-    .player-name {
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .player-points {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #00ff88;
-      margin-bottom: 12px;
-    }
-
-    .player-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
     .loading,
     .error {
       text-align: center;
       padding: 20px;
-    }
-
-    .top-1 {
-      border: 1px solid gold;
-    }
-
-    .top-2 {
-      border: 1px solid silver;
-    }
-
-    .top-3 {
-      border: 1px solid #cd7f32;
     }
 
     @media (max-width: 768px) {
@@ -230,10 +167,6 @@
       td {
         font-size: 0.85rem;
         padding: 10px;
-      }
-
-      .player-card {
-        padding: 16px;
       }
 
     }
@@ -354,23 +287,6 @@
 
     </section>
 
-    <!-- CARDS -->
-    <section class="cards-section">
-
-      <header class="section-header">
-        <h2>
-          Ranking Visual
-        </h2>
-      </header>
-
-      <div
-        id="rankingCards"
-        class="cards"
-        aria-live="polite"
-      ></div>
-
-    </section>
-
   </main>
 
   <!-- FOOTER -->
@@ -402,9 +318,6 @@
 
       const tbody =
         document.getElementById("playerList");
-
-      const cards =
-        document.getElementById("rankingCards");
 
       try {
 
@@ -477,66 +390,6 @@
         }).join("");
 
         /* =========================================
-           CARDS
-        ========================================= */
-
-        cards.innerHTML = jogadores.map((j, index) => {
-
-          let topClass = "";
-
-          if (index === 0) {
-            topClass = "top-1";
-          }
-
-          else if (index === 1) {
-            topClass = "top-2";
-          }
-
-          else if (index === 2) {
-            topClass = "top-3";
-          }
-
-          return `
-            <div class="player-card ${topClass}">
-
-              <div class="player-rank">
-                #${index + 1}
-              </div>
-
-              <div class="player-name">
-                ${escapeHtml(j.nome || "-")}
-              </div>
-
-              <div class="player-points">
-                ${Number(j.pontos) || 0} pts
-              </div>
-
-              <div class="player-stats">
-
-                <span>
-                  🏆 ${Number(j.vitorias) || 0}
-                </span>
-
-                <span>
-                  ⚽ ${Number(j.gols) || 0}
-                </span>
-
-                <span>
-                  🧤 ${Number(j.defesa) || 0}
-                </span>
-
-                <span>
-                  🤝 ${Number(j.empate) || 0}
-                </span>
-
-              </div>
-
-            </div>
-          `;
-
-        }).join("");
-
-        /* =========================================
            SEM DADOS
         ========================================= */
 
@@ -548,12 +401,6 @@
                 Nenhum jogador cadastrado.
               </td>
             </tr>
-          `;
-
-          cards.innerHTML = `
-            <div class="error">
-              Nenhum jogador encontrado.
-            </div>
           `;
         }
 
@@ -571,34 +418,7 @@
             </td>
           </tr>
         `;
-
-        cards.innerHTML = `
-          <div class="error">
-            Erro ao carregar ranking.
-          </div>
-        `;
       }
-    }
-
-    /* ======================================================
-       MENU MOBILE
-    ====================================================== */
-
-    function initMenu() {
-
-      const btn =
-        document.querySelector(".menu-toggle");
-
-      const nav =
-        document.querySelector(".app-nav");
-
-      if (!btn || !nav) {
-        return;
-      }
-
-      btn.addEventListener("click", () => {
-        nav.classList.toggle("active");
-      });
     }
 
     /* ======================================================
@@ -624,8 +444,6 @@
       () => {
 
         carregarClassificacao();
-
-        initMenu();
 
       }
     );
