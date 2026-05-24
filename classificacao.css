@@ -255,134 +255,94 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   MOBILE SOFASCORE MODE (480px)
+   MOBILE
 ====================================================== */
 
-@media (max-width: 480px) {
+@media(max-width:480px){
 
-  .app-main {
-    padding: 0.8rem 0.6rem;
-    gap: 1.5rem;
+  .app-main{
+    padding:.8rem .5rem;
+    gap:1.5rem;
   }
 
   .section-header h1,
-  .section-header h2 {
-    font-size: 1.1rem;
+  .section-header h2{
+    font-size:1.05rem;
   }
 
-  /* esconder cabeçalho */
-  table thead {
-    display: none;
+  .brand-logo{
+    width:90px;
   }
 
-  /* tabela vira bloco */
-  table,
-  tbody,
-  tr {
-    display: block;
-    width: 100%;
+  /* tabela continua tabela */
+  table{
+    min-width:560px;
   }
 
-  /* card da linha */
-  tbody tr {
-    background: rgba(20, 20, 20, 0.85);
-    margin-bottom: 12px;
-    border-radius: 14px;
-    padding: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+  th,
+  td{
+    padding:.45rem .25rem;
+    font-size:.68rem;
   }
 
-  /* células viram linhas internas */
-  td {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 0.85rem;
-    border: none;
+  th{
+    font-size:.58rem;
   }
 
-  /* OCULTAR EMPATE (6) e DEFESA (7) */
-  td:nth-child(6),
-  td:nth-child(7),
+  /* esconder EMPATE */
   th:nth-child(6),
-  th:nth-child(7) {
-    display: none !important;
+  td:nth-child(6){
+    display:none;
   }
 
-  /* posição destaque */
-  td:nth-child(1) {
-    font-size: 1rem;
-    font-weight: 900;
-    color: #fff;
+  /* esconder DEFESA */
+  th:nth-child(7),
+  td:nth-child(7){
+    display:none;
   }
 
-  /* nome destaque */
-  td:nth-child(2) {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: #fff;
+  /* nome menor */
+  th:nth-child(2),
+  td:nth-child(2){
+    width:180px;
   }
 
-  /* pontos destaque */
-  td:last-child {
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: var(--highlight-color);
+  .cards{
+    grid-template-columns:1fr;
+    gap:.8rem;
   }
 
-  .brand-logo {
-    width: 90px;
+  .player-card{
+    padding:1rem;
   }
 
-  .player-card {
-    padding: 1rem;
+  .player-name{
+    font-size:.95rem;
   }
 
-  .player-name {
-    font-size: 0.95rem;
-  }
-
-  .player-points {
-    font-size: 1.2rem;
-  }
-
-  .player-rank {
-    font-size: 1.1rem;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
+  .player-points{
+    font-size:1.2rem;
   }
 }
 
 /* ======================================================
-   VERY SMALL MOBILE (360px)
+   VERY SMALL
 ====================================================== */
 
-@media (max-width: 360px) {
-  .app-main {
-    padding: 0.6rem 0.4rem;
+@media(max-width:360px){
+
+  table{
+    min-width:520px;
   }
 
-  .section-header h1,
-  .section-header h2 {
-    font-size: 1rem;
+  th,
+  td{
+    font-size:.62rem;
+    padding:.4rem .2rem;
   }
 
-  td {
-    font-size: 0.8rem;
-  }
-
-  td:nth-child(1) {
-    font-size: 0.9rem;
-  }
-
-  td:nth-child(2) {
-    font-size: 0.85rem;
-  }
-
-  td:last-child {
-    font-size: 1rem;
+  th:nth-child(2),
+  td:nth-child(2){
+    width:160px;
   }
 }
