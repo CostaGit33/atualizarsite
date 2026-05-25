@@ -300,20 +300,39 @@ td:last-child {
     width: 90px;
   }
 
-  /* 6 colunas visíveis no mobile — esconde Defesas e Empates */
+  /* impede scroll horizontal no wrapper */
+  .table-wrapper {
+    overflow: hidden;
+  }
+
+  /* tabela fixa sem scroll — ocupa 100% da tela */
   table {
-    min-width: 560px;
+    min-width: unset;
+    width: 100%;
+    table-layout: fixed;
   }
 
-  th,
-  td {
-    padding: .55rem .3rem;
-    font-size: .78rem;
+  /* larguras fixas para as 6 colunas visíveis */
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 8%;
   }
 
-  th {
-    font-size: .68rem;
-    letter-spacing: .5px;
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 38%;
+    padding-left: 0.4rem;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3),
+  th:nth-child(4),
+  td:nth-child(4),
+  th:nth-child(5),
+  td:nth-child(5),
+  th:nth-child(8),
+  td:nth-child(8) {
+    width: 13.5%;
   }
 
   /* esconder DEFESAS */
@@ -328,9 +347,18 @@ td:last-child {
     display: none;
   }
 
-  th:nth-child(2),
-  td:nth-child(2) {
-    width: 140px;
+  th,
+  td {
+    padding: .35rem .15rem;
+    font-size: .72rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  th {
+    font-size: .62rem;
+    letter-spacing: .3px;
   }
 
   .cards {
@@ -357,18 +385,14 @@ td:last-child {
 
 @media (max-width: 360px) {
 
-  table {
-    min-width: 300px;
-  }
-
   th,
   td {
-    font-size: .68rem;
-    padding: .45rem .2rem;
+    font-size: .62rem;
+    padding: .3rem .1rem;
   }
 
   th:nth-child(2),
   td:nth-child(2) {
-    width: 120px;
+    width: 36%;
   }
 }
