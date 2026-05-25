@@ -127,7 +127,7 @@
     }
 
     body {
-      /* overflow-x removido — quebrava position:sticky do header e o menu mobile */
+      /* overflow-x: hidden REMOVIDO — quebrava position:sticky do header e o menu mobile */
       -webkit-font-smoothing: antialiased;
       margin: 0;
     }
@@ -136,6 +136,16 @@
       width: min(1400px, 95%);
       margin: 0 auto;
       padding-bottom: 40px;
+    }
+
+    /* garante que o dropdown do menu fique posicionado corretamente */
+    .app-header {
+      position: relative;
+    }
+
+    /* eleva o z-index do nav para ficar acima de tudo ao abrir */
+    .app-nav.active {
+      z-index: 1100;
     }
 
     .loading,
@@ -233,13 +243,13 @@
 
             <tr>
               <th>#</th>
-              <th>Jogador</th>
-              <th>Pontos</th>
-              <th>Vitórias</th>
-              <th>Gols</th>
-              <th>Defesas</th>
-              <th>Empates</th>
-              <th>Infrações</th>
+              <th>JOG</th>
+              <th>P</th>
+              <th>V</th>
+              <th>G</th>
+              <th>DEF</th>
+              <th>EMP</th>
+              <th>INF</th>
             </tr>
 
           </thead>
