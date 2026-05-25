@@ -127,7 +127,7 @@
     }
 
     body {
-      overflow-x: hidden;
+      /* overflow-x removido — quebrava position:sticky do header e o menu mobile */
       -webkit-font-smoothing: antialiased;
       margin: 0;
     }
@@ -138,37 +138,10 @@
       padding-bottom: 40px;
     }
 
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 14px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      text-align: center;
-      padding: 12px;
-      white-space: nowrap;
-    }
-
     .loading,
     .error {
       text-align: center;
       padding: 20px;
-    }
-
-    @media (max-width: 768px) {
-
-      th,
-      td {
-        font-size: 0.85rem;
-        padding: 10px;
-      }
-
     }
 
   </style>
@@ -355,7 +328,9 @@
               </td>
 
               <td>
-                ${escapeHtml(j.nome || "-")}
+                <a href="jogador.html?id=${j.id}">
+                  ${escapeHtml(j.nome || "-")}
+                </a>
               </td>
 
               <td>
