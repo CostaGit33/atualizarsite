@@ -29,19 +29,23 @@ img {
 }
 
 /* ======================================================
-   HEADER
+   HEADER DA SEÇÃO
 ====================================================== */
 
 .section-header {
   text-align: center;
+  padding: 1.5rem 1rem 1.2rem;
 }
 
 .section-header h1,
 .section-header h2 {
-  font-size: 1.8rem;
+  font-size: 2.6rem;
+  font-weight: 900;
   color: var(--highlight-color);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 /* ======================================================
@@ -68,8 +72,8 @@ img {
   backdrop-filter: blur(12px);
   border-radius: 14px;
   box-shadow:
-    0 20px 40px rgba(0,0,0,0.6),
-    inset 0 0 0 1px rgba(255,255,255,0.05);
+    0 20px 40px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
 
@@ -86,41 +90,45 @@ table {
 thead {
   background: linear-gradient(
     135deg,
-    rgba(214,40,40,0.95),
-    rgba(140,20,20,0.95)
+    rgba(214, 40, 40, 0.95),
+    rgba(140, 20, 20, 0.95)
   );
 }
 
 th,
 td {
-  padding: 0.45rem 0.3rem;
-  font-size: 0.75rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0.55rem 0.3rem;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
 }
 
 th {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #fff;
+  font-weight: 700;
 }
 
 /* COLUNA POSIÇÃO */
 th:nth-child(1),
 td:nth-child(1) {
-  width: 5%;
+  width: 6%;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* COLUNA NOME */
 th:nth-child(2),
 td:nth-child(2) {
   text-align: left;
-  width: 45%;
-  padding-left: 0.6rem;
+  width: 42%;
+  padding-left: 0.8rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 /* OUTRAS COLUNAS */
@@ -141,8 +149,24 @@ tbody tr:hover {
 
 /* LÍDER */
 tbody tr:first-child {
-  background: rgba(214, 40, 40, 0.18);
+  background: rgba(214, 40, 40, 0.22);
   font-weight: 700;
+}
+
+tbody tr:first-child td:nth-child(1) {
+  color: var(--highlight-color);
+}
+
+/* PONTOS EM DESTAQUE */
+td strong {
+  font-size: 1em;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* INFRAÇÕES — vermelho quando preenchido */
+td:last-child {
+  color: rgba(255, 255, 255, 0.55);
 }
 
 /* LINKS */
@@ -170,15 +194,15 @@ tbody tr:first-child {
 .player-card {
   background: linear-gradient(
     145deg,
-    rgba(214,40,40,0.95),
-    rgba(120,20,20,0.95)
+    rgba(214, 40, 40, 0.95),
+    rgba(120, 20, 20, 0.95)
   );
   border-radius: 18px;
   padding: 1.5rem;
   position: relative;
   box-shadow:
-    0 10px 30px rgba(0,0,0,0.45),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   transition: transform 0.3s ease;
 }
 
@@ -208,10 +232,11 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   TABLET RESPONSIVIDADE (768px)
+   TABLET (768px)
 ====================================================== */
 
 @media (max-width: 768px) {
+
   .app-main {
     padding: 1.5rem 1rem;
     gap: 2rem;
@@ -219,7 +244,7 @@ tbody tr:first-child {
 
   .section-header h1,
   .section-header h2 {
-    font-size: 1.4rem;
+    font-size: 2rem;
   }
 
   table {
@@ -255,94 +280,95 @@ tbody tr:first-child {
 }
 
 /* ======================================================
-   MOBILE
+   MOBILE (480px)
 ====================================================== */
 
-@media(max-width:480px){
+@media (max-width: 480px) {
 
-  .app-main{
-    padding:.8rem .5rem;
-    gap:1.5rem;
+  .app-main {
+    padding: .8rem .5rem;
+    gap: 1.5rem;
   }
 
   .section-header h1,
-  .section-header h2{
-    font-size:1.05rem;
+  .section-header h2 {
+    font-size: 1.7rem;
+    letter-spacing: 1px;
   }
 
-  .brand-logo{
-    width:90px;
+  .brand-logo {
+    width: 90px;
   }
 
-  /* tabela continua tabela */
-  table{
-    min-width:560px;
+  /* 6 colunas visíveis no mobile — esconde Defesas e Empates */
+  table {
+    min-width: 560px;
   }
 
   th,
-  td{
-    padding:.45rem .25rem;
-    font-size:.68rem;
+  td {
+    padding: .55rem .3rem;
+    font-size: .78rem;
   }
 
-  th{
-    font-size:.58rem;
+  th {
+    font-size: .68rem;
+    letter-spacing: .5px;
   }
 
-  /* esconder EMPATE */
+  /* esconder DEFESAS */
   th:nth-child(6),
-  td:nth-child(6){
-    display:none;
+  td:nth-child(6) {
+    display: none;
   }
 
-  /* esconder DEFESA */
+  /* esconder EMPATES */
   th:nth-child(7),
-  td:nth-child(7){
-    display:none;
+  td:nth-child(7) {
+    display: none;
   }
 
-  /* nome menor */
   th:nth-child(2),
-  td:nth-child(2){
-    width:180px;
+  td:nth-child(2) {
+    width: 140px;
   }
 
-  .cards{
-    grid-template-columns:1fr;
-    gap:.8rem;
+  .cards {
+    grid-template-columns: 1fr;
+    gap: .8rem;
   }
 
-  .player-card{
-    padding:1rem;
+  .player-card {
+    padding: 1rem;
   }
 
-  .player-name{
-    font-size:.95rem;
+  .player-name {
+    font-size: .95rem;
   }
 
-  .player-points{
-    font-size:1.2rem;
+  .player-points {
+    font-size: 1.2rem;
   }
 }
 
 /* ======================================================
-   VERY SMALL
+   VERY SMALL (360px)
 ====================================================== */
 
-@media(max-width:360px){
+@media (max-width: 360px) {
 
-  table{
-    min-width:520px;
+  table {
+    min-width: 300px;
   }
 
   th,
-  td{
-    font-size:.62rem;
-    padding:.4rem .2rem;
+  td {
+    font-size: .68rem;
+    padding: .45rem .2rem;
   }
 
   th:nth-child(2),
-  td:nth-child(2){
-    width:160px;
+  td:nth-child(2) {
+    width: 120px;
   }
 }
